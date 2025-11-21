@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lims.mapper.ProjectMapper">
+    
+    <resultMap type="Project" id="ProjectResult">
+        <result property="projectId"    column="project_id"    />
+        <result property="originalId"    column="original_id"    />
+        <result property="programCode"    column="program_code"    />
+        <result property="profileType"    column="profile_type"    />
+        <result property="profile"    column="profile"    />
+        <result property="mainProNum"    column="main_pro_num"    />
+        <result property="startUseDate"    column="start_use_date"    />
+        <result property="expirationDate"    column="expiration_date"    />
+        <result property="status"    column="status"    />
+        <result property="dispStatus"    column="disp_status"    />
+        <result property="rowAudit"    column="row_audit"    />
+        <result property="mPrice"    column="m_price"    />
+        <result property="explainDesc"    column="explain_desc"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectProjectVo">
+        select project_id, original_id, program_code, profile_type, profile, main_pro_num, start_use_date, expiration_date, status, disp_status, row_audit, m_price, explain_desc, create_by, create_time, update_by, update_time, remark, del_flag from lims_project
+    </sql>
+
+    <select id="selectProjectList" parameterType="Project" resultMap="ProjectResult">
+        <include refid="selectProjectVo"/>
+        <where>  
+            <if test="originalId != null  and originalId != ''"> and original_id = #{originalId}</if>
+            <if test="programCode != null  and programCode != ''"> and program_code = #{programCode}</if>
+            <if test="profileType != null  and profileType != ''"> and profile_type = #{profileType}</if>
+            <if test="profile != null  and profile != ''"> and profile = #{profile}</if>
+            <if test="mainProNum != null  and mainProNum != ''"> and main_pro_num = #{mainProNum}</if>
+            <if test="startUseDate != null "> and start_use_date = #{startUseDate}</if>
+            <if test="expirationDate != null "> and expiration_date = #{expirationDate}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="dispStatus != null  and dispStatus != ''"> and disp_status = #{dispStatus}</if>
+            <if test="rowAudit != null  and rowAudit != ''"> and row_audit = #{rowAudit}</if>
+            <if test="mPrice != null "> and m_price = #{mPrice}</if>
+            <if test="explainDesc != null  and explainDesc != ''"> and explain_desc = #{explainDesc}</if>
+        </where>
+    </select>
+    
+    <select id="selectProjectByProjectId" parameterType="Long" resultMap="ProjectResult">
+        <include refid="selectProjectVo"/>
+        where project_id = #{projectId}
+    </select>
+
+    <insert id="insertProject" parameterType="Project" useGeneratedKeys="true" keyProperty="projectId">
+        insert into lims_project
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="originalId != null">original_id,</if>
+            <if test="programCode != null and programCode != ''">program_code,</if>
+            <if test="profileType != null">profile_type,</if>
+            <if test="profile != null">profile,</if>
+            <if test="mainProNum != null">main_pro_num,</if>
+            <if test="startUseDate != null">start_use_date,</if>
+            <if test="expirationDate != null">expiration_date,</if>
+            <if test="status != null">status,</if>
+            <if test="dispStatus != null">disp_status,</if>
+            <if test="rowAudit != null">row_audit,</if>
+            <if test="mPrice != null">m_price,</if>
+            <if test="explainDesc != null">explain_desc,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="originalId != null">#{originalId},</if>
+            <if test="programCode != null and programCode != ''">#{programCode},</if>
+            <if test="profileType != null">#{profileType},</if>
+            <if test="profile != null">#{profile},</if>
+            <if test="mainProNum != null">#{mainProNum},</if>
+            <if test="startUseDate != null">#{startUseDate},</if>
+            <if test="expirationDate != null">#{expirationDate},</if>
+            <if test="status != null">#{status},</if>
+            <if test="dispStatus != null">#{dispStatus},</if>
+            <if test="rowAudit != null">#{rowAudit},</if>
+            <if test="mPrice != null">#{mPrice},</if>
+            <if test="explainDesc != null">#{explainDesc},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProject" parameterType="Project">
+        update lims_project
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="originalId != null">original_id = #{originalId},</if>
+            <if test="programCode != null and programCode != ''">program_code = #{programCode},</if>
+            <if test="profileType != null">profile_type = #{profileType},</if>
+            <if test="profile != null">profile = #{profile},</if>
+            <if test="mainProNum != null">main_pro_num = #{mainProNum},</if>
+            <if test="startUseDate != null">start_use_date = #{startUseDate},</if>
+            <if test="expirationDate != null">expiration_date = #{expirationDate},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="dispStatus != null">disp_status = #{dispStatus},</if>
+            <if test="rowAudit != null">row_audit = #{rowAudit},</if>
+            <if test="mPrice != null">m_price = #{mPrice},</if>
+            <if test="explainDesc != null">explain_desc = #{explainDesc},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where project_id = #{projectId}
+    </update>
+
+    <delete id="deleteProjectByProjectId" parameterType="Long">
+        delete from lims_project where project_id = #{projectId}
+    </delete>
+
+    <delete id="deleteProjectByProjectIds" parameterType="String">
+        delete from lims_project where project_id in 
+        <foreach item="projectId" collection="array" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lims.mapper.AnalytesMapper">
+    
+    <resultMap type="Analytes" id="AnalytesResult">
+        <result property="analytesid"    column="analytesid"    />
+        <result property="testsid"    column="testsid"    />
+        <result property="sorter"    column="sorter"    />
+        <result property="analyte"    column="analyte"    />
+        <result property="sinonym"    column="sinonym"    />
+        <result property="picture"    column="picture"    />
+        <result property="units"    column="units"    />
+        <result property="repnum"    column="repnum"    />
+        <result property="analyteype"    column="analyteype"    />
+        <result property="displayflag"    column="displayflag"    />
+        <result property="scientflag"    column="scientflag"    />
+        <result property="low"    column="low"    />
+        <result property="high"    column="high"    />
+        <result property="version"    column="version"    />
+        <result property="isweight"    column="isweight"    />
+        <result property="calcname"    column="calcname"    />
+        <result property="testcode"    column="testcode"    />
+        <result property="lowUnit"    column="low_unit"    />
+        <result property="quantificationLimit"    column="quantification_limit"    />
+        <result property="qltUnit"    column="qlt_unit"    />
+        <result property="correctionfactor"    column="correctionfactor"    />
+        <result property="dilutionrate"    column="dilutionrate"    />
+        <result property="volume"    column="volume"    />
+        <result property="validlimitrem"    column="validlimitrem"    />
+        <result property="method"    column="method"    />
+        <result property="analtype"    column="analtype"    />
+        <result property="analyteremark"    column="analyteremark"    />
+        <result property="analyteEn"    column="analyte_en"    />
+        <result property="sinonymEn"    column="sinonym_en"    />
+        <result property="analytescode"    column="analytescode"    />
+        <result property="formulatext"    column="formulatext"    />
+        <result property="zb"    column="zb"    />
+        <result property="datareference"    column="datareference"    />
+        <result property="scientific"    column="scientific"    />
+        <result property="ltdflag"    column="ltdflag"    />
+        <result property="ltdflagc"    column="ltdflagc"    />
+        <result property="isscene"    column="isscene"    />
+        <result property="notdetectedremark"    column="notdetectedremark"    />
+        <result property="testremark"    column="testremark"    />
+        <result property="isformula"    column="isformula"    />
+        <result property="reportremark"    column="reportremark"    />
+        <result property="decisionrules"    column="decisionrules"    />
+        <result property="orinodisplayflag"    column="orinodisplayflag"    />
+    </resultMap>
+
+    <sql id="selectAnalytesVo">
+        select analytesid, testsid, sorter, analyte, sinonym, picture, units, repnum, analyteype, displayflag, scientflag, low, high, version, isweight, calcname, testcode, low_unit, quantification_limit, qlt_unit, correctionfactor, dilutionrate, volume, validlimitrem, method, analtype, analyteremark, analyte_en, sinonym_en, analytescode, formulatext, zb, datareference, scientific, ltdflag, ltdflagc, isscene, notdetectedremark, testremark, isformula, reportremark, decisionrules, orinodisplayflag from lims_analytes
+    </sql>
+
+    <select id="selectAnalytesList" parameterType="Analytes" resultMap="AnalytesResult">
+        <include refid="selectAnalytesVo"/>
+        <where>  
+            <if test="testsid != null  and testsid != ''"> and testsid = #{testsid}</if>
+            <if test="sorter != null "> and sorter = #{sorter}</if>
+            <if test="analyte != null  and analyte != ''"> and analyte = #{analyte}</if>
+            <if test="sinonym != null  and sinonym != ''"> and sinonym = #{sinonym}</if>
+            <if test="picture != null  and picture != ''"> and picture = #{picture}</if>
+            <if test="units != null  and units != ''"> and units = #{units}</if>
+            <if test="repnum != null "> and repnum = #{repnum}</if>
+            <if test="analyteype != null "> and analyteype = #{analyteype}</if>
+            <if test="displayflag != null "> and displayflag = #{displayflag}</if>
+            <if test="scientflag != null "> and scientflag = #{scientflag}</if>
+            <if test="low != null  and low != ''"> and low = #{low}</if>
+            <if test="high != null  and high != ''"> and high = #{high}</if>
+            <if test="version != null  and version != ''"> and version = #{version}</if>
+            <if test="isweight != null  and isweight != ''"> and isweight = #{isweight}</if>
+            <if test="calcname != null  and calcname != ''"> and calcname like concat('%', #{calcname}, '%')</if>
+            <if test="testcode != null  and testcode != ''"> and testcode = #{testcode}</if>
+            <if test="lowUnit != null  and lowUnit != ''"> and low_unit = #{lowUnit}</if>
+            <if test="quantificationLimit != null  and quantificationLimit != ''"> and quantification_limit = #{quantificationLimit}</if>
+            <if test="qltUnit != null  and qltUnit != ''"> and qlt_unit = #{qltUnit}</if>
+            <if test="correctionfactor != null  and correctionfactor != ''"> and correctionfactor = #{correctionfactor}</if>
+            <if test="dilutionrate != null  and dilutionrate != ''"> and dilutionrate = #{dilutionrate}</if>
+            <if test="volume != null  and volume != ''"> and volume = #{volume}</if>
+            <if test="validlimitrem != null  and validlimitrem != ''"> and validlimitrem = #{validlimitrem}</if>
+            <if test="method != null  and method != ''"> and method = #{method}</if>
+            <if test="analtype != null  and analtype != ''"> and analtype = #{analtype}</if>
+            <if test="analyteremark != null  and analyteremark != ''"> and analyteremark = #{analyteremark}</if>
+            <if test="analyteEn != null  and analyteEn != ''"> and analyte_en = #{analyteEn}</if>
+            <if test="sinonymEn != null  and sinonymEn != ''"> and sinonym_en = #{sinonymEn}</if>
+            <if test="analytescode != null  and analytescode != ''"> and analytescode = #{analytescode}</if>
+            <if test="formulatext != null  and formulatext != ''"> and formulatext = #{formulatext}</if>
+            <if test="zb != null  and zb != ''"> and zb = #{zb}</if>
+            <if test="datareference != null  and datareference != ''"> and datareference = #{datareference}</if>
+            <if test="scientific != null  and scientific != ''"> and scientific = #{scientific}</if>
+            <if test="ltdflag != null "> and ltdflag = #{ltdflag}</if>
+            <if test="ltdflagc != null  and ltdflagc != ''"> and ltdflagc = #{ltdflagc}</if>
+            <if test="isscene != null "> and isscene = #{isscene}</if>
+            <if test="notdetectedremark != null  and notdetectedremark != ''"> and notdetectedremark = #{notdetectedremark}</if>
+            <if test="testremark != null  and testremark != ''"> and testremark = #{testremark}</if>
+            <if test="isformula != null "> and isformula = #{isformula}</if>
+            <if test="reportremark != null  and reportremark != ''"> and reportremark = #{reportremark}</if>
+            <if test="decisionrules != null  and decisionrules != ''"> and decisionrules = #{decisionrules}</if>
+            <if test="orinodisplayflag != null "> and orinodisplayflag = #{orinodisplayflag}</if>
+        </where>
+    </select>
+    
+    <select id="selectAnalytesByAnalytesid" parameterType="String" resultMap="AnalytesResult">
+        <include refid="selectAnalytesVo"/>
+        where analytesid = #{analytesid}
+    </select>
+
+    <insert id="insertAnalytes" parameterType="Analytes">
+        insert into lims_analytes
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="analytesid != null">analytesid,</if>
+            <if test="testsid != null">testsid,</if>
+            <if test="sorter != null">sorter,</if>
+            <if test="analyte != null">analyte,</if>
+            <if test="sinonym != null">sinonym,</if>
+            <if test="picture != null">picture,</if>
+            <if test="units != null">units,</if>
+            <if test="repnum != null">repnum,</if>
+            <if test="analyteype != null">analyteype,</if>
+            <if test="displayflag != null">displayflag,</if>
+            <if test="scientflag != null">scientflag,</if>
+            <if test="low != null">low,</if>
+            <if test="high != null">high,</if>
+            <if test="version != null">version,</if>
+            <if test="isweight != null">isweight,</if>
+            <if test="calcname != null">calcname,</if>
+            <if test="testcode != null">testcode,</if>
+            <if test="lowUnit != null">low_unit,</if>
+            <if test="quantificationLimit != null">quantification_limit,</if>
+            <if test="qltUnit != null">qlt_unit,</if>
+            <if test="correctionfactor != null">correctionfactor,</if>
+            <if test="dilutionrate != null">dilutionrate,</if>
+            <if test="volume != null">volume,</if>
+            <if test="validlimitrem != null">validlimitrem,</if>
+            <if test="method != null">method,</if>
+            <if test="analtype != null">analtype,</if>
+            <if test="analyteremark != null">analyteremark,</if>
+            <if test="analyteEn != null">analyte_en,</if>
+            <if test="sinonymEn != null">sinonym_en,</if>
+            <if test="analytescode != null">analytescode,</if>
+            <if test="formulatext != null">formulatext,</if>
+            <if test="zb != null">zb,</if>
+            <if test="datareference != null">datareference,</if>
+            <if test="scientific != null">scientific,</if>
+            <if test="ltdflag != null">ltdflag,</if>
+            <if test="ltdflagc != null">ltdflagc,</if>
+            <if test="isscene != null">isscene,</if>
+            <if test="notdetectedremark != null">notdetectedremark,</if>
+            <if test="testremark != null">testremark,</if>
+            <if test="isformula != null">isformula,</if>
+            <if test="reportremark != null">reportremark,</if>
+            <if test="decisionrules != null">decisionrules,</if>
+            <if test="orinodisplayflag != null">orinodisplayflag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="analytesid != null">#{analytesid},</if>
+            <if test="testsid != null">#{testsid},</if>
+            <if test="sorter != null">#{sorter},</if>
+            <if test="analyte != null">#{analyte},</if>
+            <if test="sinonym != null">#{sinonym},</if>
+            <if test="picture != null">#{picture},</if>
+            <if test="units != null">#{units},</if>
+            <if test="repnum != null">#{repnum},</if>
+            <if test="analyteype != null">#{analyteype},</if>
+            <if test="displayflag != null">#{displayflag},</if>
+            <if test="scientflag != null">#{scientflag},</if>
+            <if test="low != null">#{low},</if>
+            <if test="high != null">#{high},</if>
+            <if test="version != null">#{version},</if>
+            <if test="isweight != null">#{isweight},</if>
+            <if test="calcname != null">#{calcname},</if>
+            <if test="testcode != null">#{testcode},</if>
+            <if test="lowUnit != null">#{lowUnit},</if>
+            <if test="quantificationLimit != null">#{quantificationLimit},</if>
+            <if test="qltUnit != null">#{qltUnit},</if>
+            <if test="correctionfactor != null">#{correctionfactor},</if>
+            <if test="dilutionrate != null">#{dilutionrate},</if>
+            <if test="volume != null">#{volume},</if>
+            <if test="validlimitrem != null">#{validlimitrem},</if>
+            <if test="method != null">#{method},</if>
+            <if test="analtype != null">#{analtype},</if>
+            <if test="analyteremark != null">#{analyteremark},</if>
+            <if test="analyteEn != null">#{analyteEn},</if>
+            <if test="sinonymEn != null">#{sinonymEn},</if>
+            <if test="analytescode != null">#{analytescode},</if>
+            <if test="formulatext != null">#{formulatext},</if>
+            <if test="zb != null">#{zb},</if>
+            <if test="datareference != null">#{datareference},</if>
+            <if test="scientific != null">#{scientific},</if>
+            <if test="ltdflag != null">#{ltdflag},</if>
+            <if test="ltdflagc != null">#{ltdflagc},</if>
+            <if test="isscene != null">#{isscene},</if>
+            <if test="notdetectedremark != null">#{notdetectedremark},</if>
+            <if test="testremark != null">#{testremark},</if>
+            <if test="isformula != null">#{isformula},</if>
+            <if test="reportremark != null">#{reportremark},</if>
+            <if test="decisionrules != null">#{decisionrules},</if>
+            <if test="orinodisplayflag != null">#{orinodisplayflag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAnalytes" parameterType="Analytes">
+        update lims_analytes
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="testsid != null">testsid = #{testsid},</if>
+            <if test="sorter != null">sorter = #{sorter},</if>
+            <if test="analyte != null">analyte = #{analyte},</if>
+            <if test="sinonym != null">sinonym = #{sinonym},</if>
+            <if test="picture != null">picture = #{picture},</if>
+            <if test="units != null">units = #{units},</if>
+            <if test="repnum != null">repnum = #{repnum},</if>
+            <if test="analyteype != null">analyteype = #{analyteype},</if>
+            <if test="displayflag != null">displayflag = #{displayflag},</if>
+            <if test="scientflag != null">scientflag = #{scientflag},</if>
+            <if test="low != null">low = #{low},</if>
+            <if test="high != null">high = #{high},</if>
+            <if test="version != null">version = #{version},</if>
+            <if test="isweight != null">isweight = #{isweight},</if>
+            <if test="calcname != null">calcname = #{calcname},</if>
+            <if test="testcode != null">testcode = #{testcode},</if>
+            <if test="lowUnit != null">low_unit = #{lowUnit},</if>
+            <if test="quantificationLimit != null">quantification_limit = #{quantificationLimit},</if>
+            <if test="qltUnit != null">qlt_unit = #{qltUnit},</if>
+            <if test="correctionfactor != null">correctionfactor = #{correctionfactor},</if>
+            <if test="dilutionrate != null">dilutionrate = #{dilutionrate},</if>
+            <if test="volume != null">volume = #{volume},</if>
+            <if test="validlimitrem != null">validlimitrem = #{validlimitrem},</if>
+            <if test="method != null">method = #{method},</if>
+            <if test="analtype != null">analtype = #{analtype},</if>
+            <if test="analyteremark != null">analyteremark = #{analyteremark},</if>
+            <if test="analyteEn != null">analyte_en = #{analyteEn},</if>
+            <if test="sinonymEn != null">sinonym_en = #{sinonymEn},</if>
+            <if test="analytescode != null">analytescode = #{analytescode},</if>
+            <if test="formulatext != null">formulatext = #{formulatext},</if>
+            <if test="zb != null">zb = #{zb},</if>
+            <if test="datareference != null">datareference = #{datareference},</if>
+            <if test="scientific != null">scientific = #{scientific},</if>
+            <if test="ltdflag != null">ltdflag = #{ltdflag},</if>
+            <if test="ltdflagc != null">ltdflagc = #{ltdflagc},</if>
+            <if test="isscene != null">isscene = #{isscene},</if>
+            <if test="notdetectedremark != null">notdetectedremark = #{notdetectedremark},</if>
+            <if test="testremark != null">testremark = #{testremark},</if>
+            <if test="isformula != null">isformula = #{isformula},</if>
+            <if test="reportremark != null">reportremark = #{reportremark},</if>
+            <if test="decisionrules != null">decisionrules = #{decisionrules},</if>
+            <if test="orinodisplayflag != null">orinodisplayflag = #{orinodisplayflag},</if>
+        </trim>
+        where analytesid = #{analytesid}
+    </update>
+
+    <delete id="deleteAnalytesByAnalytesid" parameterType="String">
+        delete from lims_analytes where analytesid = #{analytesid}
+    </delete>
+
+    <delete id="deleteAnalytesByAnalytesids" parameterType="String">
+        delete from lims_analytes where analytesid in 
+        <foreach item="analytesid" collection="array" open="(" separator="," close=")">
+            #{analytesid}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lims.mapper.CustomerMapper">
+    
+    <resultMap type="Customer" id="CustomerResult">
+        <result property="customerId"    column="customer_id"    />
+        <result property="compname"    column="compname"    />
+        <result property="recordercode"    column="recordercode"    />
+        <result property="recorderdesc"    column="recorderdesc"    />
+        <result property="recordtime"    column="recordtime"    />
+        <result property="compcode"    column="compcode"    />
+        <result property="ccode"    column="ccode"    />
+        <result property="remarks"    column="remarks"    />
+    </resultMap>
+
+    <sql id="selectCustomerVo">
+        select customer_id, compname, recordercode, recorderdesc, recordtime, compcode, ccode, remarks from lims_customer
+    </sql>
+
+    <select id="selectCustomerList" parameterType="Customer" resultMap="CustomerResult">
+        <include refid="selectCustomerVo"/>
+        <where>  
+            <if test="compname != null  and compname != ''"> and compname like concat('%', #{compname}, '%')</if>
+            <if test="recordercode != null  and recordercode != ''"> and recordercode = #{recordercode}</if>
+            <if test="recorderdesc != null  and recorderdesc != ''"> and recorderdesc = #{recorderdesc}</if>
+            <if test="recordtime != null "> and recordtime = #{recordtime}</if>
+            <if test="compcode != null  and compcode != ''"> and compcode = #{compcode}</if>
+            <if test="ccode != null  and ccode != ''"> and ccode = #{ccode}</if>
+            <if test="remarks != null  and remarks != ''"> and remarks = #{remarks}</if>
+        </where>
+    </select>
+    
+    <select id="selectCustomerByCustomerId" parameterType="Long" resultMap="CustomerResult">
+        <include refid="selectCustomerVo"/>
+        where customer_id = #{customerId}
+    </select>
+
+    <insert id="insertCustomer" parameterType="Customer" useGeneratedKeys="true" keyProperty="customerId">
+        insert into lims_customer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="compname != null">compname,</if>
+            <if test="recordercode != null">recordercode,</if>
+            <if test="recorderdesc != null">recorderdesc,</if>
+            <if test="recordtime != null">recordtime,</if>
+            <if test="compcode != null">compcode,</if>
+            <if test="ccode != null">ccode,</if>
+            <if test="remarks != null">remarks,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="compname != null">#{compname},</if>
+            <if test="recordercode != null">#{recordercode},</if>
+            <if test="recorderdesc != null">#{recorderdesc},</if>
+            <if test="recordtime != null">#{recordtime},</if>
+            <if test="compcode != null">#{compcode},</if>
+            <if test="ccode != null">#{ccode},</if>
+            <if test="remarks != null">#{remarks},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCustomer" parameterType="Customer">
+        update lims_customer
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="compname != null">compname = #{compname},</if>
+            <if test="recordercode != null">recordercode = #{recordercode},</if>
+            <if test="recorderdesc != null">recorderdesc = #{recorderdesc},</if>
+            <if test="recordtime != null">recordtime = #{recordtime},</if>
+            <if test="compcode != null">compcode = #{compcode},</if>
+            <if test="ccode != null">ccode = #{ccode},</if>
+            <if test="remarks != null">remarks = #{remarks},</if>
+        </trim>
+        where customer_id = #{customerId}
+    </update>
+
+    <delete id="deleteCustomerByCustomerId" parameterType="Long">
+        delete from lims_customer where customer_id = #{customerId}
+    </delete>
+
+    <delete id="deleteCustomerByCustomerIds" parameterType="String">
+        delete from lims_customer where customer_id in 
+        <foreach item="customerId" collection="array" open="(" separator="," close=")">
+            #{customerId}
+        </foreach>
+    </delete>
+</mapper>

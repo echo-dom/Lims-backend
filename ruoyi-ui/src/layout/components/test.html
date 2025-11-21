@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>液相色谱质谱类原始记录模板生成器</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        secondary: '#0ea5e9',
+                        success: '#10b981',
+                        warning: '#f59e0b',
+                        danger: '#ef4444',
+                        lab: {
+                            blue: '#60a5fa',
+                            green: '#34d399',
+                            purple: '#c084fc'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #f3f4f6;
+        }
+        
+        .record-container {
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-section {
+            border-bottom: 2px solid #4b5563;
+            position: relative;
+        }
+        
+        .record-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        
+        .record-table th, .record-table td {
+            border: 1px solid #d1d5db;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        
+        .record-table th {
+            background-color: #f9fafb;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .input-field {
+            border: none;
+            border-bottom: 1px dashed #9ca3af;
+            padding: 4px 0;
+            background: transparent;
+            width: 100%;
+            outline: none;
+        }
+        
+        .input-field:focus {
+            border-bottom: 2px solid #3b82f6;
+        }
+        
+        .checkbox-container {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+        
+        .checkbox-container input {
+            margin-right: 5px;
+        }
+        
+        .signature-area {
+            border-top: 1px solid #d1d5db;
+            padding-top: 20px;
+            margin-top: 20px;
+        }
+        
+        .calculation-result {
+            background-color: #f0fdf4;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+        
+        .print-version {
+            display: none;
+        }
+        
+        @media print {
+            .no-print {
+                display: none;
+            }
+            .print-version {
+                display: block;
+            }
+            body {
+                padding: 0;
+                margin: 0;
+                background: white;
+            }
+            .record-container {
+                box-shadow: none;
+                border: none;
+                padding: 0;
+                margin: 0;
+            }
+            .record-table {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app" class="min-h-screen py-8 bg-gray-100">
+        <div class="max-w-5xl mx-auto px-4">
+            <!-- 控制面板 -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6 no-print">
+                <h1 class="text-2xl font-bold text-gray-800 mb-4">液相色谱质谱类原始记录模板生成器</h1>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">模板选择</label>
+                        <select v-model="selectedTemplate" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary">
+                            <option value="default">TJIL3007-2023-1.0 苯并[a]芘检测</option>
+                            <option value="pesticide">农药残留检测</option>
+                            <option value="mycotoxin">真菌毒素检测</option>
+                            <option value="additives">食品添加剂检测</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">操作</label>
+                        <div class="flex space-x-3">
+                            <button @click="saveRecord" class="flex-1 bg-primary hover:bg-blue-700 text-white py-2 px-4 rounded-md transition">
+                                <i class="fas fa-save mr-2"></i>保存记录
+                            </button>
+                            <button @click="printRecord" class="flex-1 bg-success hover:bg-green-700 text-white py-2 px-4 rounded-md transition">
+                                <i class="fas fa-print mr-2"></i>打印记录
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-info-circle text-blue-500 text-xl mt-1"></i>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-blue-800">使用说明</h3>
+                            <div class="mt-2 text-sm text-blue-700">
+                                <p>1. 填写所有带输入框的项目信息</p>
+                                <p>2. 系统会自动计算结果并填充到相应位置</p>
+                                <p>3. 检查所有信息无误后保存或打印记录</p>
+                                <p>4. 打印版本将自动隐藏编辑界面</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 原始记录表 -->
+            <div class="record-container rounded-lg overflow-hidden">
+                <!-- 页眉部分 -->
+                <div class="header-section p-6">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="text-sm text-gray-500">共 <input type="number" v-model="totalPages" class="input-field w-12 text-center"> 页，第 <input type="number" v-model="currentPage" class="input-field w-12 text-center"> 页</div>
+                            <h1 class="text-2xl font-bold text-gray-800 mt-2">液相色谱质谱类原始记录表</h1>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-lg font-semibold">TJIL3007-2023-1.0</div>
+                            <div class="mt-2">
+                                <span class="text-gray-700">样品编号：</span>
+                                <input v-model="formData.sampleId" class="input-field w-40 inline-block">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                        <div>
+                            <span class="text-gray-700">样品类型：</span>
+                            <input v-model="formData.sampleType" class="input-field w-48 inline-block">
+                        </div>
+                        <div class="text-right md:text-left">
+                            <span class="text-gray-700">检验日期：</span>
+                            <input v-model="formData.testYear" class="input-field w-16 text-center inline-block">年
+                            <input v-model="formData.testMonth" class="input-field w-12 text-center inline-block">月
+                            <input v-model="formData.testDay" class="input-field w-12 text-center inline-block">日
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 主体内容 -->
+                <div class="p-6">
+                    <!-- 检验依据 -->
+                    <div class="mb-6">
+                        <div class="flex items-center mb-2">
+                            <div class="w-3 h-3 bg-lab-blue rounded-full mr-2"></div>
+                            <h2 class="text-lg font-semibold text-gray-800">检验依据（标准）</h2>
+                        </div>
+                        <input v-model="formData.testStandard" class="input-field w-full">
+                    </div>
+                    
+                    <!-- 检验项目 -->
+                    <div class="mb-6">
+                        <div class="flex items-center mb-2">
+                            <div class="w-3 h-3 bg-lab-green rounded-full mr-2"></div>
+                            <h2 class="text-lg font-semibold text-gray-800">检验项目</h2>
+                        </div>
+                        <input v-model="formData.testItem" class="input-field w-full">
+                    </div>
+                    
+                    <!-- 环境条件 -->
+                    <div class="mb-6">
+                        <div class="flex items-center mb-2">
+                            <div class="w-3 h-3 bg-lab-purple rounded-full mr-2"></div>
+                            <h2 class="text-lg font-semibold text-gray-800">环境条件</h2>
+                        </div>
+                        <table class="record-table mb-4">
+                            <tr>
+                                <td width="30%">检测地点</td>
+                                <td width="70%">
+                                    <input v-model="formData.testLocation" class="input-field">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>温度</td>
+                                <td>
+                                    <input v-model="formData.temperature" class="input-field w-20"> ℃
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>湿度</td>
+                                <td>
+                                    <input v-model="formData.humidity" class="input-field w-20"> %
+                                </td>
+                            </tr>
+                        </table>
+                        
+                        <div class="flex items-center mt-2">
+                            <span class="text-gray-700 mr-4">检测前后样品状况：</span>
+                            <label class="checkbox-container">
+                                <input type="radio" v-model="formData.sampleCondition" value="normal"> 正常
+                            </label>
+                            <label class="checkbox-container">
+                                <input type="radio" v-model="formData.sampleCondition" value="abnormal"> 异常
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- 仪器设备 -->
+                    <div class="mb-6">
+                        <div class="flex items-center mb-2">
+                            <div class="w-3 h-3 bg-lab-blue rounded-full mr-2"></div>
+                            <h2 class="text-lg font-semibold text-gray-800">主要仪器设备名称、型号、编号</h2>
+                        </div>
+                        <textarea v-model="formData.instruments" class="w-full border border-gray-300 rounded p-3 min-h-[80px] focus:outline-none focus:ring-1 focus:ring-primary"></textarea>
+                        
+                        <div class="flex items-center mt-4">
+                            <span class="text-gray-700 mr-4">检测前后仪器状况：</span>
+                            <label class="checkbox-container">
+                                <input type="radio" v-model="formData.instrumentCondition" value="normal"> 正常
+                            </label>
+                            <label class="checkbox-container">
+                                <input type="radio" v-model="formData.instrumentCondition" value="abnormal"> 异常
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- 测试条件 -->
+                    <div class="mb-6">
+                        <div class="flex items-center mb-2">
+                            <div class="w-3 h-3 bg-lab-green rounded-full mr-2"></div>
+                            <h2 class="text-lg font-semibold text-gray-800">测试条件</h2>
+                        </div>
+                        <textarea v-model="formData.testConditions" class="w-full border border-gray-300 rounded p-3 min-h-[100px] focus:outline-none focus:ring-1 focus:ring-primary"></textarea>
+                    </div>
+                    
+                    <!-- 样品处理 -->
+                    <div class="mb-6">
+                        <div class="flex items-center mb-2">
+                            <div class="w-3 h-3 bg-lab-purple rounded-full mr-2"></div>
+                            <h2 class="text-lg font-semibold text-gray-800">样品处理</h2>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <p class="text-gray-700 mb-2">参照标准：</p>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+                                <label class="checkbox-container">
+                                    <input type="checkbox" v-model="formData.referenceStandards" value="5.11"> □5.11 谷物及系列品
+                                </label>
+                                <label class="checkbox-container">
+                                    <input type="checkbox" v-model="formData.referenceStandards" value="5.12"> □5.12 蒸、烧、烤两类及蒸、烤水产品
+                                </label>
+                                <label class="checkbox-container">
+                                    <input type="checkbox" v-model="formData.referenceStandards" value="5.13"> □5.13 油脂及系列品
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <p class="text-gray-700 mb-2">净化方法：</p>
+                        <textarea v-model="formData.purificationMethod" class="w-full border border-gray-300 rounded p-3 min-h-[60px] mb-4 focus:outline-none focus:ring-1 focus:ring-primary"></textarea>
+                        
+                        <p class="text-gray-700 mb-2">样品处理过程：</p>
+                        <textarea v-model="formData.sampleProcessing" class="w-full border border-gray-300 rounded p-3 min-h-[80px] focus:outline-none focus:ring-1 focus:ring-primary"></textarea>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                            <div>
+                                <label class="block text-gray-700 mb-1">样品量 m1 (g)</label>
+                                <input v-model="formData.sampleMass1" type="number" step="0.001" class="input-field w-full">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 mb-1">样品量 m2 (g)</label>
+                                <input v-model="formData.sampleMass2" type="number" step="0.001" class="input-field w-full">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 mb-1">稀释因子 f</label>
+                                <input v-model="formData.dilutionFactor" type="number" step="0.01" class="input-field w-full">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 空白实验 -->
+                    <div class="mb-6">
+                        <div class="flex items-center mb-2">
+                            <div class="w-3 h-3 bg-lab-blue rounded-full mr-2"></div>
+                            <h2 class="text-lg font-semibold text-gray-800">空白实验</h2>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="checkbox-container">
+                                <input type="checkbox" v-model="formData.blankRequired"> ①□是、□否要求做空白实验
+                            </label>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="checkbox-container">
+                                <input type="checkbox" v-model="formData.blankDetected"> ②相应项目的空白实验□是、□否均为未检出
+                            </label>
+                        </div>
+                        
+                        <div v-if="!formData.blankDetected" class="mt-3">
+                            <p class="text-gray-700 mb-2">空白实验中检出的项目及数值：</p>
+                            <textarea v-model="formData.blankDetectedItems" class="w-full border border-gray-300 rounded p-3 min-h-[60px] focus:outline-none focus:ring-1 focus:ring-primary"></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- 计算结果 -->
+                    <div class="mb-6">
+                        <div class="flex items-center mb-2">
+                            <div class="w-3 h-3 bg-lab-green rounded-full mr-2"></div>
+                            <h2 class="text-lg font-semibold text-gray-800">计算结果</h2>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <p class="text-gray-700 font-medium mb-2">计算公式：</p>
+                            <div class="bg-gray-100 p-4 rounded-lg">
+                                \( X = \frac{(C - C_0) \times V \times f}{m} \)
+                            </div>
+                        </div>
+                        
+                        <table class="record-table mb-4">
+                            <thead>
+                                <tr>
+                                    <th rowspan="2">测定结果C (ng/mL)</th>
+                                    <th rowspan="2">检验项目</th>
+                                    <th colspan="2">浓度C (ng/mL)</th>
+                                    <th colspan="2">处理结果X (μg/kg)</th>
+                                    <th rowspan="2">平均值 \(\overline{X}\)</th>
+                                    <th rowspan="2">精密度 %</th>
+                                </tr>
+                                <tr>
+                                    <th>C₁</th>
+                                    <th>C₂</th>
+                                    <th>X₁</th>
+                                    <th>X₂</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td rowspan="2">见图谱含量</td>
+                                    <td>{{ formData.testItem || '苯并[a]芘' }}</td>
+                                    <td><input v-model="formData.concentration1" type="number" step="0.001" class="input-field"></td>
+                                    <td><input v-model="formData.concentration2" type="number" step="0.001" class="input-field"></td>
+                                    <td class="calculation-result">{{ calculateResult(1) || '-' }}</td>
+                                    <td class="calculation-result">{{ calculateResult(2) || '-' }}</td>
+                                    <td class="calculation-result">{{ averageResult || '-' }}</td>
+                                    <td class="calculation-result">{{ precision || '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <td>最后结果</td>
+                                    <td colspan="2">-</td>
+                                    <td colspan="2">-</td>
+                                    <td class="calculation-result">{{ averageResult || '-' }}</td>
+                                    <td class="calculation-result">{{ precision || '-' }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="flex items-center mt-2">
+                            <span class="text-gray-700 mr-4">精密度是否符合标准不超过20%的要求：</span>
+                            <label class="checkbox-container">
+                                <input type="radio" v-model="formData.precisionCompliant" :value="true"> 是
+                            </label>
+                            <label class="checkbox-container">
+                                <input type="radio" v-model="formData.precisionCompliant" :value="false"> 否
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- 备注 -->
+                    <div class="mb-6">
+                        <div class="flex items-center mb-2">
+                            <div class="w-3 h-3 bg-lab-purple rounded-full mr-2"></div>
+                            <h2 class="text-lg font-semibold text-gray-800">备注</h2>
+                        </div>
+                        <textarea v-model="formData.notes" class="w-full border border-gray-300 rounded p-3 min-h-[100px] focus:outline-none focus:ring-1 focus:ring-primary"></textarea>
+                    </div>
+                    
+                    <!-- 检测人 -->
+                    <div class="signature-area">
+                        <div class="flex justify-end">
+                            <div class="w-64">
+                                <p class="text-gray-700 mb-1">检测人：</p>
+                                <input v-model="formData.tester" class="input-field w-full">
+                                <div class="flex mt-1">
+                                    <input v-model="formData.signYear" class="input-field w-16 text-center">年
+                                    <input v-model="formData.signMonth" class="input-field w-12 text-center">月
+                                    <input v-model="formData.signDay" class="input-field w-12 text-center">日
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 打印版本提示 -->
+            <div class="print-version fixed bottom-0 left-0 right-0 bg-yellow-100 border-t border-yellow-300 py-2 text-center text-yellow-800">
+                <p>液相色谱质谱类原始记录表 - {{ formData.sampleId || '未命名样品' }} | 打印时间: {{ currentDateTime }}</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { createApp, ref, computed, watch } = Vue;
+        
+        createApp({
+            setup() {
+                // 表单数据
+                const formData = ref({
+                    sampleId: "SP20230615001",
+                    sampleType: "食品",
+                    testYear: "2023",
+                    testMonth: "06",
+                    testDay: "15",
+                    testStandard: "GB 5009.27-2016",
+                    testItem: "苯并[a]芘",
+                    testLocation: "118液相室",
+                    temperature: "25",
+                    humidity: "45",
+                    sampleCondition: "normal",
+                    instruments: "Waters-H-Class超声波液相色谱仪（2209）\nME503TE电子天平（2818）",
+                    instrumentCondition: "normal",
+                    testConditions: "色谱柱：Luna Omega C181.6 μm2.1×100 mm，柱温：40 ℃。\n检测器：FLR检测器，激发波长：384 μm，发射波长：406 μm。\n流动剂：水+乙醇(12488)，流速：0.30 mL/min，进样量：5 μL。",
+                    referenceStandards: ["5.13"],
+                    purificationMethod: "净化方法2分子的定性",
+                    sampleProcessing: "称取样品量为m，按照标准的方法提取后，过固相萃取性净化，最后加入体积为V/mL的乙醇溶解溶液，再稀释，稀释因子为f——，过0.22 μm滤膜，待测。",
+                    sampleMass1: "0.502",
+                    sampleMass2: "0.498",
+                    dilutionFactor: 1.0,
+                    blankRequired: true,
+                    blankDetected: true,
+                    blankDetectedItems: "",
+                    concentration1: 0.345,
+                    concentration2: 0.351,
+                    precisionCompliant: true,
+                    notes: `1. "/"表示没有响应或未检出；"——"表示该项目不作检测；"未检出"表示测定结果低于标准检出限或定量限。苯并[a]芘可与另BAP。
+2. 检出限为0.2μg/kg，定量限为0.5μg/kg；最后结果保留到小数点后一位。
+3. 精密度□是、□否符合标准不超过20%的要求。
+4. 标准曲线浓度为0.02,0.5,1.0,2.0,5.0,10.0μg/mL。
+5. 标准工作曲线配制记录(含编号)及图谱信息、质控记录详见报告。`,
+                    tester: "张明",
+                    signYear: "2023",
+                    signMonth: "06",
+                    signDay: "17"
+                });
+                
+                // 其他状态
+                const selectedTemplate = ref("default");
+                const totalPages = ref(1);
+                const currentPage = ref(1);
+                const currentDateTime = ref(new Date().toLocaleString());
+                
+                // 计算结果
+                const calculateResult = (index) => {
+                    if (!formData.value[`concentration${index}`] || !formData.value.sampleMass1 || !formData.value.dilutionFactor) 
+                        return null;
+                    
+                    const concentration = formData.value[`concentration${index}`];
+                    const mass = formData.value[`sampleMass${index}`];
+                    
+                    // 简化计算: X = (C * V * f) / m
+                    // 假设V为50mL（根据标准方法）
+                    const result = (concentration * 50 * formData.value.dilutionFactor) / mass;
+                    return result.toFixed(3);
+                };
+                
+                const averageResult = computed(() => {
+                    const result1 = parseFloat(calculateResult(1));
+                    const result2 = parseFloat(calculateResult(2));
+                    
+                    if (isNaN(result1) || isNaN(result2)) return null;
+                    
+                    return ((result1 + result2) / 2).toFixed(3);
+                });
+                
+                const precision = computed(() => {
+                    const result1 = parseFloat(calculateResult(1));
+                    const result2 = parseFloat(calculateResult(2));
+                    
+                    if (isNaN(result1) || isNaN(result2)) return null;
+                    
+                    const max = Math.max(result1, result2);
+                    const min = Math.min(result1, result2);
+                    const avg = (result1 + result2) / 2;
+                    
+                    return (((max - min) / avg) * 100).toFixed(1);
+                });
+                
+                // 保存记录
+                const saveRecord = () => {
+                    alert(`记录已保存: ${formData.value.sampleId}`);
+                    // 实际应用中这里会有API调用
+                };
+                
+                // 打印记录
+                const printRecord = () => {
+                    window.print();
+                };
+                
+                // 监听模板选择变化
+                watch(selectedTemplate, (newValue) => {
+                    if (newValue === "pesticide") {
+                        formData.value.testItem = "农药残留总量";
+                        formData.value.testStandard = "GB 23200.113-2018";
+                    } else if (newValue === "mycotoxin") {
+                        formData.value.testItem = "黄曲霉毒素B1";
+                        formData.value.testStandard = "GB 5009.22-2016";
+                    } else if (newValue === "additives") {
+                        formData.value.testItem = "防腐剂含量";
+                        formData.value.testStandard = "GB 5009.28-2016";
+                    } else {
+                        formData.value.testItem = "苯并[a]芘";
+                        formData.value.testStandard = "GB 5009.27-2016";
+                    }
+                });
+                
+                return {
+                    formData,
+                    selectedTemplate,
+                    totalPages,
+                    currentPage,
+                    currentDateTime,
+                    calculateResult,
+                    averageResult,
+                    precision,
+                    saveRecord,
+                    printRecord
+                };
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>

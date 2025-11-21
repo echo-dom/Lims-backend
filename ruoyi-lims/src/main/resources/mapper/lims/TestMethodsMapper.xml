@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lims.mapper.TestMethodsMapper">
+    
+    <resultMap type="TestMethods" id="TestMethodsResult">
+        <result property="testMethodsId"    column="test_methods_id"    />
+        <result property="methodCode"    column="method_code"    />
+        <result property="methodNo"    column="method_no"    />
+        <result property="methodName"    column="method_name"    />
+        <result property="methodNameEng"    column="method_name_eng"    />
+        <result property="methodType"    column="method_type"    />
+        <result property="status"    column="status"    />
+        <result property="clause"    column="clause"    />
+        <result property="clauseName"    column="clause_name"    />
+        <result property="clauseNameEng"    column="clause_name_eng"    />
+        <result property="isOrders"    column="is_orders"    />
+        <result property="methodStatus"    column="method_status"    />
+        <result property="methodStatusValue"    column="method_status_value"    />
+        <result property="methodDesc"    column="method_desc"    />
+        <result property="version"    column="version"    />
+        <result property="detectorAndCondition"    column="detector_and_condition"    />
+        <result property="eqRemarkAndMethod"    column="eq_remark_and_method"    />
+        <result property="methodOverview"    column="method_overview"    />
+        <result property="testExplain"    column="test_explain"    />
+        <result property="methodExplain"    column="method_explain"    />
+        <result property="consumable"    column="consumable"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectTestMethodsVo">
+        select test_methods_id, method_code, method_no, method_name, method_name_eng, method_type, status, clause, clause_name, clause_name_eng, is_orders, method_status, method_status_value, method_desc, version, detector_and_condition, eq_remark_and_method, method_overview, test_explain, method_explain, consumable, dept_id, create_by, create_time, update_by, update_time, remark, del_flag from lims_test_methods
+    </sql>
+
+    <select id="selectTestMethodsList" parameterType="TestMethods" resultMap="TestMethodsResult">
+        <include refid="selectTestMethodsVo"/>
+        <where>  
+            <if test="methodCode != null  and methodCode != ''"> and method_code = #{methodCode}</if>
+            <if test="methodNo != null  and methodNo != ''"> and method_no = #{methodNo}</if>
+            <if test="methodName != null  and methodName != ''"> and method_name like concat('%', #{methodName}, '%')</if>
+            <if test="methodNameEng != null  and methodNameEng != ''"> and method_name_eng = #{methodNameEng}</if>
+            <if test="methodType != null  and methodType != ''"> and method_type = #{methodType}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="clause != null  and clause != ''"> and clause = #{clause}</if>
+            <if test="clauseName != null  and clauseName != ''"> and clause_name like concat('%', #{clauseName}, '%')</if>
+            <if test="clauseNameEng != null  and clauseNameEng != ''"> and clause_name_eng = #{clauseNameEng}</if>
+            <if test="isOrders != null  and isOrders != ''"> and is_orders = #{isOrders}</if>
+            <if test="methodStatus != null  and methodStatus != ''"> and method_status = #{methodStatus}</if>
+            <if test="methodStatusValue != null  and methodStatusValue != ''"> and method_status_value = #{methodStatusValue}</if>
+            <if test="methodDesc != null  and methodDesc != ''"> and method_desc = #{methodDesc}</if>
+            <if test="version != null  and version != ''"> and version = #{version}</if>
+            <if test="detectorAndCondition != null  and detectorAndCondition != ''"> and detector_and_condition = #{detectorAndCondition}</if>
+            <if test="eqRemarkAndMethod != null  and eqRemarkAndMethod != ''"> and eq_remark_and_method = #{eqRemarkAndMethod}</if>
+            <if test="methodOverview != null  and methodOverview != ''"> and method_overview = #{methodOverview}</if>
+            <if test="testExplain != null  and testExplain != ''"> and test_explain = #{testExplain}</if>
+            <if test="methodExplain != null  and methodExplain != ''"> and method_explain = #{methodExplain}</if>
+            <if test="consumable != null  and consumable != ''"> and consumable = #{consumable}</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+        </where>
+    </select>
+    
+    <select id="selectTestMethodsByTestMethodsId" parameterType="Long" resultMap="TestMethodsResult">
+        <include refid="selectTestMethodsVo"/>
+        where test_methods_id = #{testMethodsId}
+    </select>
+
+    <insert id="insertTestMethods" parameterType="TestMethods">
+        insert into lims_test_methods
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="testMethodsId != null">test_methods_id,</if>
+            <if test="methodCode != null and methodCode != ''">method_code,</if>
+            <if test="methodNo != null">method_no,</if>
+            <if test="methodName != null and methodName != ''">method_name,</if>
+            <if test="methodNameEng != null">method_name_eng,</if>
+            <if test="methodType != null">method_type,</if>
+            <if test="status != null">status,</if>
+            <if test="clause != null">clause,</if>
+            <if test="clauseName != null">clause_name,</if>
+            <if test="clauseNameEng != null">clause_name_eng,</if>
+            <if test="isOrders != null">is_orders,</if>
+            <if test="methodStatus != null">method_status,</if>
+            <if test="methodStatusValue != null">method_status_value,</if>
+            <if test="methodDesc != null">method_desc,</if>
+            <if test="version != null">version,</if>
+            <if test="detectorAndCondition != null">detector_and_condition,</if>
+            <if test="eqRemarkAndMethod != null">eq_remark_and_method,</if>
+            <if test="methodOverview != null">method_overview,</if>
+            <if test="testExplain != null">test_explain,</if>
+            <if test="methodExplain != null">method_explain,</if>
+            <if test="consumable != null">consumable,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="testMethodsId != null">#{testMethodsId},</if>
+            <if test="methodCode != null and methodCode != ''">#{methodCode},</if>
+            <if test="methodNo != null">#{methodNo},</if>
+            <if test="methodName != null and methodName != ''">#{methodName},</if>
+            <if test="methodNameEng != null">#{methodNameEng},</if>
+            <if test="methodType != null">#{methodType},</if>
+            <if test="status != null">#{status},</if>
+            <if test="clause != null">#{clause},</if>
+            <if test="clauseName != null">#{clauseName},</if>
+            <if test="clauseNameEng != null">#{clauseNameEng},</if>
+            <if test="isOrders != null">#{isOrders},</if>
+            <if test="methodStatus != null">#{methodStatus},</if>
+            <if test="methodStatusValue != null">#{methodStatusValue},</if>
+            <if test="methodDesc != null">#{methodDesc},</if>
+            <if test="version != null">#{version},</if>
+            <if test="detectorAndCondition != null">#{detectorAndCondition},</if>
+            <if test="eqRemarkAndMethod != null">#{eqRemarkAndMethod},</if>
+            <if test="methodOverview != null">#{methodOverview},</if>
+            <if test="testExplain != null">#{testExplain},</if>
+            <if test="methodExplain != null">#{methodExplain},</if>
+            <if test="consumable != null">#{consumable},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTestMethods" parameterType="TestMethods">
+        update lims_test_methods
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="methodCode != null and methodCode != ''">method_code = #{methodCode},</if>
+            <if test="methodNo != null">method_no = #{methodNo},</if>
+            <if test="methodName != null and methodName != ''">method_name = #{methodName},</if>
+            <if test="methodNameEng != null">method_name_eng = #{methodNameEng},</if>
+            <if test="methodType != null">method_type = #{methodType},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="clause != null">clause = #{clause},</if>
+            <if test="clauseName != null">clause_name = #{clauseName},</if>
+            <if test="clauseNameEng != null">clause_name_eng = #{clauseNameEng},</if>
+            <if test="isOrders != null">is_orders = #{isOrders},</if>
+            <if test="methodStatus != null">method_status = #{methodStatus},</if>
+            <if test="methodStatusValue != null">method_status_value = #{methodStatusValue},</if>
+            <if test="methodDesc != null">method_desc = #{methodDesc},</if>
+            <if test="version != null">version = #{version},</if>
+            <if test="detectorAndCondition != null">detector_and_condition = #{detectorAndCondition},</if>
+            <if test="eqRemarkAndMethod != null">eq_remark_and_method = #{eqRemarkAndMethod},</if>
+            <if test="methodOverview != null">method_overview = #{methodOverview},</if>
+            <if test="testExplain != null">test_explain = #{testExplain},</if>
+            <if test="methodExplain != null">method_explain = #{methodExplain},</if>
+            <if test="consumable != null">consumable = #{consumable},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where test_methods_id = #{testMethodsId}
+    </update>
+
+    <delete id="deleteTestMethodsByTestMethodsId" parameterType="Long">
+        delete from lims_test_methods where test_methods_id = #{testMethodsId}
+    </delete>
+
+    <delete id="deleteTestMethodsByTestMethodsIds" parameterType="String">
+        delete from lims_test_methods where test_methods_id in 
+        <foreach item="testMethodsId" collection="array" open="(" separator="," close=")">
+            #{testMethodsId}
+        </foreach>
+    </delete>
+</mapper>

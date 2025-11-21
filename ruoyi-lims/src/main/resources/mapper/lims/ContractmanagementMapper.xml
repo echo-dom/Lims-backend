@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lims.mapper.ContractmanagementMapper">
+    
+    <resultMap type="Contractmanagement" id="ContractmanagementResult">
+        <result property="contractid"    column="contractid"    />
+        <result property="contractcode"    column="contractcode"    />
+        <result property="customercode"    column="customercode"    />
+        <result property="customername"    column="customername"    />
+        <result property="createrdesc"    column="createrdesc"    />
+        <result property="creatercode"    column="creatercode"    />
+        <result property="createrdate"    column="createrdate"    />
+        <result property="contractname"    column="contractname"    />
+    </resultMap>
+
+    <sql id="selectContractmanagementVo">
+        select contractid, contractcode, customercode, customername, createrdesc, creatercode, createrdate, contractname from lims_contractmanagement
+    </sql>
+
+    <select id="selectContractmanagementList" parameterType="Contractmanagement" resultMap="ContractmanagementResult">
+        <include refid="selectContractmanagementVo"/>
+        <where>  
+            <if test="contractcode != null  and contractcode != ''"> and contractcode = #{contractcode}</if>
+            <if test="customercode != null  and customercode != ''"> and customercode = #{customercode}</if>
+            <if test="customername != null  and customername != ''"> and customername like concat('%', #{customername}, '%')</if>
+            <if test="createrdesc != null  and createrdesc != ''"> and createrdesc = #{createrdesc}</if>
+            <if test="creatercode != null  and creatercode != ''"> and creatercode = #{creatercode}</if>
+            <if test="createrdate != null "> and createrdate = #{createrdate}</if>
+            <if test="contractname != null  and contractname != ''"> and contractname like concat('%', #{contractname}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectContractmanagementByContractid" parameterType="String" resultMap="ContractmanagementResult">
+        <include refid="selectContractmanagementVo"/>
+        where contractid = #{contractid}
+    </select>
+
+    <insert id="insertContractmanagement" parameterType="Contractmanagement">
+        insert into lims_contractmanagement
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="contractid != null">contractid,</if>
+            <if test="contractcode != null">contractcode,</if>
+            <if test="customercode != null">customercode,</if>
+            <if test="customername != null">customername,</if>
+            <if test="createrdesc != null">createrdesc,</if>
+            <if test="creatercode != null">creatercode,</if>
+            <if test="createrdate != null">createrdate,</if>
+            <if test="contractname != null">contractname,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="contractid != null">#{contractid},</if>
+            <if test="contractcode != null">#{contractcode},</if>
+            <if test="customercode != null">#{customercode},</if>
+            <if test="customername != null">#{customername},</if>
+            <if test="createrdesc != null">#{createrdesc},</if>
+            <if test="creatercode != null">#{creatercode},</if>
+            <if test="createrdate != null">#{createrdate},</if>
+            <if test="contractname != null">#{contractname},</if>
+         </trim>
+    </insert>
+
+    <update id="updateContractmanagement" parameterType="Contractmanagement">
+        update lims_contractmanagement
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="contractcode != null">contractcode = #{contractcode},</if>
+            <if test="customercode != null">customercode = #{customercode},</if>
+            <if test="customername != null">customername = #{customername},</if>
+            <if test="createrdesc != null">createrdesc = #{createrdesc},</if>
+            <if test="creatercode != null">creatercode = #{creatercode},</if>
+            <if test="createrdate != null">createrdate = #{createrdate},</if>
+            <if test="contractname != null">contractname = #{contractname},</if>
+        </trim>
+        where contractid = #{contractid}
+    </update>
+
+    <delete id="deleteContractmanagementByContractid" parameterType="String">
+        delete from lims_contractmanagement where contractid = #{contractid}
+    </delete>
+
+    <delete id="deleteContractmanagementByContractids" parameterType="String">
+        delete from lims_contractmanagement where contractid in 
+        <foreach item="contractid" collection="array" open="(" separator="," close=")">
+            #{contractid}
+        </foreach>
+    </delete>
+</mapper>

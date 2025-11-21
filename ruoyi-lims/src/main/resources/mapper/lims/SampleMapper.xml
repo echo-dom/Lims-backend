@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lims.mapper.SampleMapper">
+    
+    <resultMap type="Sample" id="SampleResult">
+        <result property="sampleId"    column="sample_id"    />
+        <result property="sampleCode"    column="sample_code"    />
+        <result property="sampleName"    column="sample_name"    />
+        <result property="sampleTypeId"    column="sample_type_id"    />
+        <result property="customerId"    column="customer_id"    />
+        <result property="batchNumber"    column="batch_number"    />
+        <result property="productionDate"    column="production_date"    />
+        <result property="expiryDate"    column="expiry_date"    />
+        <result property="samplingDate"    column="sampling_date"    />
+        <result property="samplingLocation"    column="sampling_location"    />
+        <result property="sampleStatus"    column="sample_status"    />
+        <result property="storageLocation"    column="storage_location"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectSampleVo">
+        select sample_id, sample_code, sample_name, sample_type_id, customer_id, batch_number, production_date, expiry_date, sampling_date, sampling_location, sample_status, storage_location, create_by, create_time, update_by, update_time, remark from lims_sample
+    </sql>
+
+    <select id="selectSampleList" parameterType="Sample" resultMap="SampleResult">
+        <include refid="selectSampleVo"/>
+        <where>  
+            <if test="sampleCode != null  and sampleCode != ''"> and sample_code = #{sampleCode}</if>
+            <if test="sampleName != null  and sampleName != ''"> and sample_name like concat('%', #{sampleName}, '%')</if>
+            <if test="sampleTypeId != null "> and sample_type_id = #{sampleTypeId}</if>
+            <if test="customerId != null "> and customer_id = #{customerId}</if>
+            <if test="batchNumber != null  and batchNumber != ''"> and batch_number = #{batchNumber}</if>
+            <if test="productionDate != null "> and production_date = #{productionDate}</if>
+            <if test="expiryDate != null "> and expiry_date = #{expiryDate}</if>
+            <if test="samplingDate != null "> and sampling_date = #{samplingDate}</if>
+            <if test="samplingLocation != null  and samplingLocation != ''"> and sampling_location = #{samplingLocation}</if>
+            <if test="sampleStatus != null  and sampleStatus != ''"> and sample_status = #{sampleStatus}</if>
+            <if test="storageLocation != null  and storageLocation != ''"> and storage_location = #{storageLocation}</if>
+        </where>
+    </select>
+    
+    <select id="selectSampleBySampleId" parameterType="Long" resultMap="SampleResult">
+        <include refid="selectSampleVo"/>
+        where sample_id = #{sampleId}
+    </select>
+
+    <insert id="insertSample" parameterType="Sample" useGeneratedKeys="true" keyProperty="sampleId">
+        insert into lims_sample
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sampleCode != null and sampleCode != ''">sample_code,</if>
+            <if test="sampleName != null and sampleName != ''">sample_name,</if>
+            <if test="sampleTypeId != null">sample_type_id,</if>
+            <if test="customerId != null">customer_id,</if>
+            <if test="batchNumber != null">batch_number,</if>
+            <if test="productionDate != null">production_date,</if>
+            <if test="expiryDate != null">expiry_date,</if>
+            <if test="samplingDate != null">sampling_date,</if>
+            <if test="samplingLocation != null">sampling_location,</if>
+            <if test="sampleStatus != null">sample_status,</if>
+            <if test="storageLocation != null">storage_location,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sampleCode != null and sampleCode != ''">#{sampleCode},</if>
+            <if test="sampleName != null and sampleName != ''">#{sampleName},</if>
+            <if test="sampleTypeId != null">#{sampleTypeId},</if>
+            <if test="customerId != null">#{customerId},</if>
+            <if test="batchNumber != null">#{batchNumber},</if>
+            <if test="productionDate != null">#{productionDate},</if>
+            <if test="expiryDate != null">#{expiryDate},</if>
+            <if test="samplingDate != null">#{samplingDate},</if>
+            <if test="samplingLocation != null">#{samplingLocation},</if>
+            <if test="sampleStatus != null">#{sampleStatus},</if>
+            <if test="storageLocation != null">#{storageLocation},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSample" parameterType="Sample">
+        update lims_sample
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sampleCode != null and sampleCode != ''">sample_code = #{sampleCode},</if>
+            <if test="sampleName != null and sampleName != ''">sample_name = #{sampleName},</if>
+            <if test="sampleTypeId != null">sample_type_id = #{sampleTypeId},</if>
+            <if test="customerId != null">customer_id = #{customerId},</if>
+            <if test="batchNumber != null">batch_number = #{batchNumber},</if>
+            <if test="productionDate != null">production_date = #{productionDate},</if>
+            <if test="expiryDate != null">expiry_date = #{expiryDate},</if>
+            <if test="samplingDate != null">sampling_date = #{samplingDate},</if>
+            <if test="samplingLocation != null">sampling_location = #{samplingLocation},</if>
+            <if test="sampleStatus != null">sample_status = #{sampleStatus},</if>
+            <if test="storageLocation != null">storage_location = #{storageLocation},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where sample_id = #{sampleId}
+    </update>
+
+    <delete id="deleteSampleBySampleId" parameterType="Long">
+        delete from lims_sample where sample_id = #{sampleId}
+    </delete>
+
+    <delete id="deleteSampleBySampleIds" parameterType="String">
+        delete from lims_sample where sample_id in 
+        <foreach item="sampleId" collection="array" open="(" separator="," close=")">
+            #{sampleId}
+        </foreach>
+    </delete>
+</mapper>

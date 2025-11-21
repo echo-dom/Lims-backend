@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lims.mapper.TestsMapper">
+    
+    <resultMap type="Tests" id="TestsResult">
+        <result property="TESTSID"    column="TESTSID"    />
+        <result property="SORTER"    column="SORTER"    />
+        <result property="TESTCODE"    column="TESTCODE"    />
+        <result property="TESTNAME"    column="TESTNAME"    />
+        <result property="TESTEXPLAIN"    column="TESTEXPLAIN"    />
+        <result property="SPELLSIMPLIFY"    column="SPELLSIMPLIFY"    />
+        <result property="FULLTYPE"    column="FULLTYPE"    />
+        <result property="DOMAINID"    column="DOMAINID"    />
+        <result property="TESTCATEGORYID"    column="TESTCATEGORYID"    />
+        <result property="TESTCATENAME"    column="TESTCATENAME"    />
+        <result property="wswflag"    column="wswflag"    />
+        <result property="NAMEINREPORT"    column="NAMEINREPORT"    />
+        <result property="ORIGINALCODE"    column="ORIGINALCODE"    />
+        <result property="samplingMethod"    column="SAMPLING_METHOD"    />
+        <result property="HISTORYPERSON"    column="HISTORYPERSON"    />
+        <result property="DEPT"    column="DEPT"    />
+        <result property="STATUS"    column="STATUS"    />
+        <result property="RECORDERCODE"    column="RECORDERCODE"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectTestsVo">
+        select TESTSID, SORTER, TESTCODE, TESTNAME, TESTEXPLAIN, SPELLSIMPLIFY, FULLTYPE, DOMAINID, TESTCATEGORYID, TESTCATENAME, wswflag, NAMEINREPORT, ORIGINALCODE, SAMPLING_METHOD, HISTORYPERSON, DEPT, STATUS, RECORDERCODE, create_time, update_time from lims_tests
+    </sql>
+
+    <select id="selectTestsList" parameterType="Tests" resultMap="TestsResult">
+        <include refid="selectTestsVo"/>
+        <where>  
+            <if test="SORTER != null "> and SORTER = #{SORTER}</if>
+            <if test="TESTCODE != null  and TESTCODE != ''"> and TESTCODE like concat('%', #{TESTCODE}, '%')</if>
+            <if test="TESTNAME != null  and TESTNAME != ''"> and TESTNAME like concat('%', #{TESTNAME}, '%')</if>
+            <if test="TESTEXPLAIN != null  and TESTEXPLAIN != ''"> and TESTEXPLAIN = #{TESTEXPLAIN}</if>
+            <if test="SPELLSIMPLIFY != null  and SPELLSIMPLIFY != ''"> and SPELLSIMPLIFY = #{SPELLSIMPLIFY}</if>
+            <if test="FULLTYPE != null  and FULLTYPE != ''"> and FULLTYPE = #{FULLTYPE}</if>
+            <if test="DOMAINID != null  and DOMAINID != ''"> and DOMAINID = #{DOMAINID}</if>
+            <if test="TESTCATEGORYID != null  and TESTCATEGORYID != ''"> and TESTCATEGORYID = #{TESTCATEGORYID}</if>
+            <if test="TESTCATENAME != null  and TESTCATENAME != ''"> and TESTCATENAME like concat('%', #{TESTCATENAME}, '%')</if>
+            <if test="wswflag != null "> and wswflag = #{wswflag}</if>
+            <if test="NAMEINREPORT != null  and NAMEINREPORT != ''"> and NAMEINREPORT = #{NAMEINREPORT}</if>
+            <if test="ORIGINALCODE != null  and ORIGINALCODE != ''"> and ORIGINALCODE = #{ORIGINALCODE}</if>
+            <if test="samplingMethod != null  and samplingMethod != ''"> and SAMPLING_METHOD = #{samplingMethod}</if>
+            <if test="HISTORYPERSON != null  and HISTORYPERSON != ''"> and HISTORYPERSON = #{HISTORYPERSON}</if>
+            <if test="DEPT != null  and DEPT != ''"> and DEPT = #{DEPT}</if>
+            <if test="STATUS != null  and STATUS != ''"> and STATUS = #{STATUS}</if>
+            <if test="RECORDERCODE != null  and RECORDERCODE != ''"> and RECORDERCODE = #{RECORDERCODE}</if>
+        </where>
+    </select>
+    
+    <select id="selectTestsByTESTSID" parameterType="Long" resultMap="TestsResult">
+        <include refid="selectTestsVo"/>
+        where TESTSID = #{TESTSID}
+    </select>
+
+    <insert id="insertTests" parameterType="Tests" useGeneratedKeys="true" keyProperty="TESTSID">
+        insert into lims_tests
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="SORTER != null">SORTER,</if>
+            <if test="TESTCODE != null and TESTCODE != ''">TESTCODE,</if>
+            <if test="TESTNAME != null and TESTNAME != ''">TESTNAME,</if>
+            <if test="TESTEXPLAIN != null">TESTEXPLAIN,</if>
+            <if test="SPELLSIMPLIFY != null">SPELLSIMPLIFY,</if>
+            <if test="FULLTYPE != null">FULLTYPE,</if>
+            <if test="DOMAINID != null">DOMAINID,</if>
+            <if test="TESTCATEGORYID != null">TESTCATEGORYID,</if>
+            <if test="TESTCATENAME != null">TESTCATENAME,</if>
+            <if test="wswflag != null">wswflag,</if>
+            <if test="NAMEINREPORT != null">NAMEINREPORT,</if>
+            <if test="ORIGINALCODE != null">ORIGINALCODE,</if>
+            <if test="samplingMethod != null">SAMPLING_METHOD,</if>
+            <if test="HISTORYPERSON != null">HISTORYPERSON,</if>
+            <if test="DEPT != null and DEPT != ''">DEPT,</if>
+            <if test="STATUS != null">STATUS,</if>
+            <if test="RECORDERCODE != null">RECORDERCODE,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="SORTER != null">#{SORTER},</if>
+            <if test="TESTCODE != null and TESTCODE != ''">#{TESTCODE},</if>
+            <if test="TESTNAME != null and TESTNAME != ''">#{TESTNAME},</if>
+            <if test="TESTEXPLAIN != null">#{TESTEXPLAIN},</if>
+            <if test="SPELLSIMPLIFY != null">#{SPELLSIMPLIFY},</if>
+            <if test="FULLTYPE != null">#{FULLTYPE},</if>
+            <if test="DOMAINID != null">#{DOMAINID},</if>
+            <if test="TESTCATEGORYID != null">#{TESTCATEGORYID},</if>
+            <if test="TESTCATENAME != null">#{TESTCATENAME},</if>
+            <if test="wswflag != null">#{wswflag},</if>
+            <if test="NAMEINREPORT != null">#{NAMEINREPORT},</if>
+            <if test="ORIGINALCODE != null">#{ORIGINALCODE},</if>
+            <if test="samplingMethod != null">#{samplingMethod},</if>
+            <if test="HISTORYPERSON != null">#{HISTORYPERSON},</if>
+            <if test="DEPT != null and DEPT != ''">#{DEPT},</if>
+            <if test="STATUS != null">#{STATUS},</if>
+            <if test="RECORDERCODE != null">#{RECORDERCODE},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTests" parameterType="Tests">
+        update lims_tests
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="SORTER != null">SORTER = #{SORTER},</if>
+            <if test="TESTCODE != null and TESTCODE != ''">TESTCODE = #{TESTCODE},</if>
+            <if test="TESTNAME != null and TESTNAME != ''">TESTNAME = #{TESTNAME},</if>
+            <if test="TESTEXPLAIN != null">TESTEXPLAIN = #{TESTEXPLAIN},</if>
+            <if test="SPELLSIMPLIFY != null">SPELLSIMPLIFY = #{SPELLSIMPLIFY},</if>
+            <if test="FULLTYPE != null">FULLTYPE = #{FULLTYPE},</if>
+            <if test="DOMAINID != null">DOMAINID = #{DOMAINID},</if>
+            <if test="TESTCATEGORYID != null">TESTCATEGORYID = #{TESTCATEGORYID},</if>
+            <if test="TESTCATENAME != null">TESTCATENAME = #{TESTCATENAME},</if>
+            <if test="wswflag != null">wswflag = #{wswflag},</if>
+            <if test="NAMEINREPORT != null">NAMEINREPORT = #{NAMEINREPORT},</if>
+            <if test="ORIGINALCODE != null">ORIGINALCODE = #{ORIGINALCODE},</if>
+            <if test="samplingMethod != null">SAMPLING_METHOD = #{samplingMethod},</if>
+            <if test="HISTORYPERSON != null">HISTORYPERSON = #{HISTORYPERSON},</if>
+            <if test="DEPT != null and DEPT != ''">DEPT = #{DEPT},</if>
+            <if test="STATUS != null">STATUS = #{STATUS},</if>
+            <if test="RECORDERCODE != null">RECORDERCODE = #{RECORDERCODE},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where TESTSID = #{TESTSID}
+    </update>
+
+    <delete id="deleteTestsByTESTSID" parameterType="Long">
+        delete from lims_tests where TESTSID = #{TESTSID}
+    </delete>
+
+    <delete id="deleteTestsByTESTSIDs" parameterType="String">
+        delete from lims_tests where TESTSID in 
+        <foreach item="TESTSID" collection="array" open="(" separator="," close=")">
+            #{TESTSID}
+        </foreach>
+    </delete>
+</mapper>

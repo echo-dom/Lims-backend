@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lims.mapper.SampleCodeRuleMapper">
+    
+    <resultMap type="SampleCodeRule" id="SampleCodeRuleResult">
+        <result property="ruleId"    column="rule_id"    />
+        <result property="ruleName"    column="rule_name"    />
+        <result property="pattern"    column="pattern"    />
+        <result property="resetType"    column="reset_type"    />
+        <result property="prefix"    column="prefix"    />
+        <result property="seqLength"    column="seq_length"    />
+        <result property="sampleTypeId"    column="sample_type_id"    />
+        <result property="customerId"    column="customer_id"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectSampleCodeRuleVo">
+        select rule_id, rule_name, pattern, reset_type, prefix, seq_length, sample_type_id, customer_id, status, create_by, create_time, update_by, update_time, remark from lims_sample_code_rule
+    </sql>
+
+    <select id="selectSampleCodeRuleList" parameterType="SampleCodeRule" resultMap="SampleCodeRuleResult">
+        <include refid="selectSampleCodeRuleVo"/>
+        <where>  
+            <if test="ruleName != null  and ruleName != ''"> and rule_name like concat('%', #{ruleName}, '%')</if>
+            <if test="pattern != null  and pattern != ''"> and pattern = #{pattern}</if>
+            <if test="resetType != null  and resetType != ''"> and reset_type = #{resetType}</if>
+            <if test="prefix != null  and prefix != ''"> and prefix = #{prefix}</if>
+            <if test="seqLength != null "> and seq_length = #{seqLength}</if>
+            <if test="sampleTypeId != null "> and sample_type_id = #{sampleTypeId}</if>
+            <if test="customerId != null "> and customer_id = #{customerId}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectSampleCodeRuleByRuleId" parameterType="Long" resultMap="SampleCodeRuleResult">
+        <include refid="selectSampleCodeRuleVo"/>
+        where rule_id = #{ruleId}
+    </select>
+
+    <insert id="insertSampleCodeRule" parameterType="SampleCodeRule" useGeneratedKeys="true" keyProperty="ruleId">
+        insert into lims_sample_code_rule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="ruleName != null and ruleName != ''">rule_name,</if>
+            <if test="pattern != null and pattern != ''">pattern,</if>
+            <if test="resetType != null and resetType != ''">reset_type,</if>
+            <if test="prefix != null">prefix,</if>
+            <if test="seqLength != null">seq_length,</if>
+            <if test="sampleTypeId != null">sample_type_id,</if>
+            <if test="customerId != null">customer_id,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="ruleName != null and ruleName != ''">#{ruleName},</if>
+            <if test="pattern != null and pattern != ''">#{pattern},</if>
+            <if test="resetType != null and resetType != ''">#{resetType},</if>
+            <if test="prefix != null">#{prefix},</if>
+            <if test="seqLength != null">#{seqLength},</if>
+            <if test="sampleTypeId != null">#{sampleTypeId},</if>
+            <if test="customerId != null">#{customerId},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSampleCodeRule" parameterType="SampleCodeRule">
+        update lims_sample_code_rule
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="ruleName != null and ruleName != ''">rule_name = #{ruleName},</if>
+            <if test="pattern != null and pattern != ''">pattern = #{pattern},</if>
+            <if test="resetType != null and resetType != ''">reset_type = #{resetType},</if>
+            <if test="prefix != null">prefix = #{prefix},</if>
+            <if test="seqLength != null">seq_length = #{seqLength},</if>
+            <if test="sampleTypeId != null">sample_type_id = #{sampleTypeId},</if>
+            <if test="customerId != null">customer_id = #{customerId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where rule_id = #{ruleId}
+    </update>
+
+    <delete id="deleteSampleCodeRuleByRuleId" parameterType="Long">
+        delete from lims_sample_code_rule where rule_id = #{ruleId}
+    </delete>
+
+    <delete id="deleteSampleCodeRuleByRuleIds" parameterType="String">
+        delete from lims_sample_code_rule where rule_id in 
+        <foreach item="ruleId" collection="array" open="(" separator="," close=")">
+            #{ruleId}
+        </foreach>
+    </delete>
+</mapper>

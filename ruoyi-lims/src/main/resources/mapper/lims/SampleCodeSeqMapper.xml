@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lims.mapper.SampleCodeSeqMapper">
+    
+    <resultMap type="SampleCodeSeq" id="SampleCodeSeqResult">
+        <result property="seqId"    column="seq_id"    />
+        <result property="ruleId"    column="rule_id"    />
+        <result property="seqDate"    column="seq_date"    />
+        <result property="seqValue"    column="seq_value"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectSampleCodeSeqVo">
+        select seq_id, rule_id, seq_date, seq_value, create_time, update_time from lims_sample_code_seq
+    </sql>
+
+    <select id="selectSampleCodeSeqList" parameterType="SampleCodeSeq" resultMap="SampleCodeSeqResult">
+        <include refid="selectSampleCodeSeqVo"/>
+        <where>  
+            <if test="ruleId != null "> and rule_id = #{ruleId}</if>
+            <if test="seqDate != null  and seqDate != ''"> and seq_date = #{seqDate}</if>
+            <if test="seqValue != null "> and seq_value = #{seqValue}</if>
+        </where>
+    </select>
+    
+    <select id="selectSampleCodeSeqBySeqId" parameterType="Long" resultMap="SampleCodeSeqResult">
+        <include refid="selectSampleCodeSeqVo"/>
+        where seq_id = #{seqId}
+    </select>
+
+    <insert id="insertSampleCodeSeq" parameterType="SampleCodeSeq" useGeneratedKeys="true" keyProperty="seqId">
+        insert into lims_sample_code_seq
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="ruleId != null">rule_id,</if>
+            <if test="seqDate != null and seqDate != ''">seq_date,</if>
+            <if test="seqValue != null">seq_value,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="ruleId != null">#{ruleId},</if>
+            <if test="seqDate != null and seqDate != ''">#{seqDate},</if>
+            <if test="seqValue != null">#{seqValue},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSampleCodeSeq" parameterType="SampleCodeSeq">
+        update lims_sample_code_seq
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="ruleId != null">rule_id = #{ruleId},</if>
+            <if test="seqDate != null and seqDate != ''">seq_date = #{seqDate},</if>
+            <if test="seqValue != null">seq_value = #{seqValue},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where seq_id = #{seqId}
+    </update>
+
+    <delete id="deleteSampleCodeSeqBySeqId" parameterType="Long">
+        delete from lims_sample_code_seq where seq_id = #{seqId}
+    </delete>
+
+    <delete id="deleteSampleCodeSeqBySeqIds" parameterType="String">
+        delete from lims_sample_code_seq where seq_id in 
+        <foreach item="seqId" collection="array" open="(" separator="," close=")">
+            #{seqId}
+        </foreach>
+    </delete>
+</mapper>
