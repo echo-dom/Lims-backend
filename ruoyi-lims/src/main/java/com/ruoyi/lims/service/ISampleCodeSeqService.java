@@ -9,8 +9,7 @@ import com.ruoyi.lims.domain.SampleCodeSeq;
  * @author kongdejin
  * @date 2025-11-20
  */
-public interface ISampleCodeSeqService 
-{
+public interface ISampleCodeSeqService {
     /**
      * 查询样品编码序列
      * 
@@ -58,4 +57,13 @@ public interface ISampleCodeSeqService
      * @return 结果
      */
     public int deleteSampleCodeSeqBySeqId(Long seqId);
+
+    /**
+     * 获取下一个序列值
+     * 
+     * @param ruleId  规则ID
+     * @param seqDate 序列日期
+     * @return 序列值
+     */
+    public long getNextSequence(Long ruleId, String seqDate);
 }

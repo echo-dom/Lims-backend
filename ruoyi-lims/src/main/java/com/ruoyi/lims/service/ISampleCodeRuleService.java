@@ -9,8 +9,7 @@ import com.ruoyi.lims.domain.SampleCodeRule;
  * @author kongdejin
  * @date 2025-11-20
  */
-public interface ISampleCodeRuleService 
-{
+public interface ISampleCodeRuleService {
     /**
      * 查询样品编码规则
      * 
@@ -58,4 +57,13 @@ public interface ISampleCodeRuleService
      * @return 结果
      */
     public int deleteSampleCodeRuleByRuleId(Long ruleId);
+
+    /**
+     * 匹配最佳样品编码规则
+     * 
+     * @param sampleTypeId 样品类型ID
+     * @param customerId   客户ID
+     * @return 规则对象
+     */
+    public SampleCodeRule selectMatchRule(Long sampleTypeId, Long customerId);
 }

@@ -4,6 +4,8 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
@@ -13,11 +15,11 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @author kongdejin
  * @date 2025-06-05
  */
-public class Sample extends BaseEntity
-{
+public class Sample extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     /** 样品ID */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long sampleId;
 
     /** 样品编码 */
@@ -67,146 +69,277 @@ public class Sample extends BaseEntity
     @Excel(name = "存储位置")
     private String storageLocation;
 
-    public void setSampleId(Long sampleId) 
-    {
+    /** 来源文件夹编号 */
+    @Excel(name = "来源文件夹编号")
+    private String fromFolderNo;
+
+    /** 任务状态 */
+    @Excel(name = "任务状态")
+    private String taskStatus;
+
+    /** 开案人描述 */
+    @Excel(name = "开案人描述")
+    private String auditorDesc;
+
+    /** 开案时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "开案时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
+    private Date auditTime;
+
+    /** 退回原因 */
+    @Excel(name = "退回原因")
+    private String returnReason;
+
+    /** 退回人 */
+    @Excel(name = "退回人")
+    private String returnPerson;
+
+    /** 退回时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "退回时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
+    private Date returnTime;
+
+    /** 原始记录名称 */
+    @Excel(name = "原始记录名称")
+    private String originalRecordName;
+
+    /** 收款状态 */
+    @Excel(name = "收款状态")
+    private String paymentStatus;
+
+    /** 主项目数 */
+    @Excel(name = "主项目数")
+    private String mainProNum;
+
+    /** 地址编码 */
+    private String addressCode;
+
+    /** 客户名称 */
+    @Excel(name = "客户名称")
+    private String customerName;
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setAddressCode(String addressCode) {
+        this.addressCode = addressCode;
+    }
+
+    public String getAddressCode() {
+        return addressCode;
+    }
+
+    public void setSampleId(Long sampleId) {
         this.sampleId = sampleId;
     }
 
-    public Long getSampleId() 
-    {
+    public Long getSampleId() {
         return sampleId;
     }
 
-    public void setSampleCode(String sampleCode) 
-    {
+    public void setSampleCode(String sampleCode) {
         this.sampleCode = sampleCode;
     }
 
-    public String getSampleCode() 
-    {
+    public String getSampleCode() {
         return sampleCode;
     }
 
-    public void setSampleName(String sampleName) 
-    {
+    public void setSampleName(String sampleName) {
         this.sampleName = sampleName;
     }
 
-    public String getSampleName() 
-    {
+    public String getSampleName() {
         return sampleName;
     }
 
-    public void setSampleTypeId(Long sampleTypeId) 
-    {
+    public void setSampleTypeId(Long sampleTypeId) {
         this.sampleTypeId = sampleTypeId;
     }
 
-    public Long getSampleTypeId() 
-    {
+    public Long getSampleTypeId() {
         return sampleTypeId;
     }
 
-    public void setCustomerId(Long customerId) 
-    {
+    public void setCustomerId(Long customerId) {
         this.customerId = customerId;
     }
 
-    public Long getCustomerId() 
-    {
+    public Long getCustomerId() {
         return customerId;
     }
 
-    public void setBatchNumber(String batchNumber) 
-    {
+    public void setBatchNumber(String batchNumber) {
         this.batchNumber = batchNumber;
     }
 
-    public String getBatchNumber() 
-    {
+    public String getBatchNumber() {
         return batchNumber;
     }
 
-    public void setProductionDate(Date productionDate) 
-    {
+    public void setProductionDate(Date productionDate) {
         this.productionDate = productionDate;
     }
 
-    public Date getProductionDate() 
-    {
+    public Date getProductionDate() {
         return productionDate;
     }
 
-    public void setExpiryDate(Date expiryDate) 
-    {
+    public void setExpiryDate(Date expiryDate) {
         this.expiryDate = expiryDate;
     }
 
-    public Date getExpiryDate() 
-    {
+    public Date getExpiryDate() {
         return expiryDate;
     }
 
-    public void setSamplingDate(Date samplingDate) 
-    {
+    public void setSamplingDate(Date samplingDate) {
         this.samplingDate = samplingDate;
     }
 
-    public Date getSamplingDate() 
-    {
+    public Date getSamplingDate() {
         return samplingDate;
     }
 
-    public void setSamplingLocation(String samplingLocation) 
-    {
+    public void setSamplingLocation(String samplingLocation) {
         this.samplingLocation = samplingLocation;
     }
 
-    public String getSamplingLocation() 
-    {
+    public String getSamplingLocation() {
         return samplingLocation;
     }
 
-    public void setSampleStatus(String sampleStatus) 
-    {
+    public void setSampleStatus(String sampleStatus) {
         this.sampleStatus = sampleStatus;
     }
 
-    public String getSampleStatus() 
-    {
+    public String getSampleStatus() {
         return sampleStatus;
     }
 
-    public void setStorageLocation(String storageLocation) 
-    {
+    public void setStorageLocation(String storageLocation) {
         this.storageLocation = storageLocation;
     }
 
-    public String getStorageLocation() 
-    {
+    public String getStorageLocation() {
         return storageLocation;
+    }
+
+    public void setFromFolderNo(String fromFolderNo) {
+        this.fromFolderNo = fromFolderNo;
+    }
+
+    public String getFromFolderNo() {
+        return fromFolderNo;
+    }
+
+    public void setTaskStatus(String taskStatus) {
+        this.taskStatus = taskStatus;
+    }
+
+    public String getTaskStatus() {
+        return taskStatus;
+    }
+
+    public void setAuditorDesc(String auditorDesc) {
+        this.auditorDesc = auditorDesc;
+    }
+
+    public String getAuditorDesc() {
+        return auditorDesc;
+    }
+
+    public void setAuditTime(Date auditTime) {
+        this.auditTime = auditTime;
+    }
+
+    public Date getAuditTime() {
+        return auditTime;
+    }
+
+    public void setReturnReason(String returnReason) {
+        this.returnReason = returnReason;
+    }
+
+    public String getReturnReason() {
+        return returnReason;
+    }
+
+    public void setReturnPerson(String returnPerson) {
+        this.returnPerson = returnPerson;
+    }
+
+    public String getReturnPerson() {
+        return returnPerson;
+    }
+
+    public void setReturnTime(Date returnTime) {
+        this.returnTime = returnTime;
+    }
+
+    public Date getReturnTime() {
+        return returnTime;
+    }
+
+    public void setOriginalRecordName(String originalRecordName) {
+        this.originalRecordName = originalRecordName;
+    }
+
+    public String getOriginalRecordName() {
+        return originalRecordName;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setMainProNum(String mainProNum) {
+        this.mainProNum = mainProNum;
+    }
+
+    public String getMainProNum() {
+        return mainProNum;
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("sampleId", getSampleId())
-            .append("sampleCode", getSampleCode())
-            .append("sampleName", getSampleName())
-            .append("sampleTypeId", getSampleTypeId())
-            .append("customerId", getCustomerId())
-            .append("batchNumber", getBatchNumber())
-            .append("productionDate", getProductionDate())
-            .append("expiryDate", getExpiryDate())
-            .append("samplingDate", getSamplingDate())
-            .append("samplingLocation", getSamplingLocation())
-            .append("sampleStatus", getSampleStatus())
-            .append("storageLocation", getStorageLocation())
-            .append("createBy", getCreateBy())
-            .append("createTime", getCreateTime())
-            .append("updateBy", getUpdateBy())
-            .append("updateTime", getUpdateTime())
-            .append("remark", getRemark())
-            .toString();
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+                .append("sampleId", getSampleId())
+                .append("sampleCode", getSampleCode())
+                .append("sampleName", getSampleName())
+                .append("sampleTypeId", getSampleTypeId())
+                .append("customerId", getCustomerId())
+                .append("batchNumber", getBatchNumber())
+                .append("productionDate", getProductionDate())
+                .append("expiryDate", getExpiryDate())
+                .append("samplingDate", getSamplingDate())
+                .append("samplingLocation", getSamplingLocation())
+                .append("sampleStatus", getSampleStatus())
+                .append("storageLocation", getStorageLocation())
+                .append("fromFolderNo", getFromFolderNo())
+                .append("taskStatus", getTaskStatus())
+                .append("auditorDesc", getAuditorDesc())
+                .append("auditTime", getAuditTime())
+                .append("returnReason", getReturnReason())
+                .append("returnPerson", getReturnPerson())
+                .append("returnTime", getReturnTime())
+                .append("originalRecordName", getOriginalRecordName())
+                .append("paymentStatus", getPaymentStatus())
+                .append("mainProNum", getMainProNum())
+                .append("createBy", getCreateBy())
+                .append("createTime", getCreateTime())
+                .append("updateBy", getUpdateBy())
+                .append("updateTime", getUpdateTime())
+                .append("remark", getRemark())
+                .toString();
     }
 }

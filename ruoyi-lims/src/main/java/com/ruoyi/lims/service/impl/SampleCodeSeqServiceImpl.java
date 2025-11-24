@@ -15,8 +15,7 @@ import com.ruoyi.lims.service.ISampleCodeSeqService;
  * @date 2025-11-20
  */
 @Service
-public class SampleCodeSeqServiceImpl implements ISampleCodeSeqService 
-{
+public class SampleCodeSeqServiceImpl implements ISampleCodeSeqService {
     @Autowired
     private SampleCodeSeqMapper sampleCodeSeqMapper;
 
@@ -27,8 +26,7 @@ public class SampleCodeSeqServiceImpl implements ISampleCodeSeqService
      * @return 样品编码序列
      */
     @Override
-    public SampleCodeSeq selectSampleCodeSeqBySeqId(Long seqId)
-    {
+    public SampleCodeSeq selectSampleCodeSeqBySeqId(Long seqId) {
         return sampleCodeSeqMapper.selectSampleCodeSeqBySeqId(seqId);
     }
 
@@ -39,8 +37,7 @@ public class SampleCodeSeqServiceImpl implements ISampleCodeSeqService
      * @return 样品编码序列
      */
     @Override
-    public List<SampleCodeSeq> selectSampleCodeSeqList(SampleCodeSeq sampleCodeSeq)
-    {
+    public List<SampleCodeSeq> selectSampleCodeSeqList(SampleCodeSeq sampleCodeSeq) {
         return sampleCodeSeqMapper.selectSampleCodeSeqList(sampleCodeSeq);
     }
 
@@ -51,8 +48,7 @@ public class SampleCodeSeqServiceImpl implements ISampleCodeSeqService
      * @return 结果
      */
     @Override
-    public int insertSampleCodeSeq(SampleCodeSeq sampleCodeSeq)
-    {
+    public int insertSampleCodeSeq(SampleCodeSeq sampleCodeSeq) {
         sampleCodeSeq.setCreateTime(DateUtils.getNowDate());
         return sampleCodeSeqMapper.insertSampleCodeSeq(sampleCodeSeq);
     }
@@ -64,8 +60,7 @@ public class SampleCodeSeqServiceImpl implements ISampleCodeSeqService
      * @return 结果
      */
     @Override
-    public int updateSampleCodeSeq(SampleCodeSeq sampleCodeSeq)
-    {
+    public int updateSampleCodeSeq(SampleCodeSeq sampleCodeSeq) {
         sampleCodeSeq.setUpdateTime(DateUtils.getNowDate());
         return sampleCodeSeqMapper.updateSampleCodeSeq(sampleCodeSeq);
     }
@@ -77,8 +72,7 @@ public class SampleCodeSeqServiceImpl implements ISampleCodeSeqService
      * @return 结果
      */
     @Override
-    public int deleteSampleCodeSeqBySeqIds(Long[] seqIds)
-    {
+    public int deleteSampleCodeSeqBySeqIds(Long[] seqIds) {
         return sampleCodeSeqMapper.deleteSampleCodeSeqBySeqIds(seqIds);
     }
 
@@ -89,8 +83,35 @@ public class SampleCodeSeqServiceImpl implements ISampleCodeSeqService
      * @return 结果
      */
     @Override
-    public int deleteSampleCodeSeqBySeqId(Long seqId)
-    {
+    public int deleteSampleCodeSeqBySeqId(Long seqId) {
         return sampleCodeSeqMapper.deleteSampleCodeSeqBySeqId(seqId);
+    }
+
+    /**
+     * 获取下一个序列值
+     * 
+     * @param ruleId  规则ID
+     * @param seqDate 序列日期
+     * @return 序列值
+     */
+    @Override
+    @org.springframework.transaction.annotation.Transactional
+    public long getNextSequence(Long ruleId, String seqDate) {
+        SampleCodeSeq seq = sampleCodeSeqMapper.selectSampleCodeSeqForUpdate(ruleId, seqDate);
+        if (seq == null) {
+            seq = new SampleCodeSeq();
+            seq.setRuleId(ruleId);
+            seq.setSeqDate(seqDate);
+            seq.setSeqValue(1L);
+            seq.setCreateTime(DateUtils.getNowDate());
+            seq.setUpdateTime(DateUtils.getNowDate());
+            sampleCodeSeqMapper.insertSampleCodeSeq(seq);
+            return 1L;
+        } else {
+            seq.setSeqValue(seq.getSeqValue() + 1);
+            seq.setUpdateTime(DateUtils.getNowDate());
+            sampleCodeSeqMapper.updateSampleCodeSeq(seq);
+            return seq.getSeqValue();
+        }
     }
 }

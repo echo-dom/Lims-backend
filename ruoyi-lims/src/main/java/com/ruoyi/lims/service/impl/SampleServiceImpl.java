@@ -15,10 +15,12 @@ import com.ruoyi.lims.service.ISampleService;
  * @date 2025-06-05
  */
 @Service
-public class SampleServiceImpl implements ISampleService 
-{
+public class SampleServiceImpl implements ISampleService {
     @Autowired
     private SampleMapper sampleMapper;
+
+    @Autowired
+    private com.ruoyi.lims.service.SampleCodeGenerator sampleCodeGenerator;
 
     /**
      * 查询LIMS样品
@@ -27,8 +29,7 @@ public class SampleServiceImpl implements ISampleService
      * @return LIMS样品
      */
     @Override
-    public Sample selectSampleBySampleId(Long sampleId)
-    {
+    public Sample selectSampleBySampleId(Long sampleId) {
         return sampleMapper.selectSampleBySampleId(sampleId);
     }
 
@@ -39,8 +40,7 @@ public class SampleServiceImpl implements ISampleService
      * @return LIMS样品
      */
     @Override
-    public List<Sample> selectSampleList(Sample sample)
-    {
+    public List<Sample> selectSampleList(Sample sample) {
         return sampleMapper.selectSampleList(sample);
     }
 
@@ -51,9 +51,35 @@ public class SampleServiceImpl implements ISampleService
      * @return 结果
      */
     @Override
-    public int insertSample(Sample sample)
-    {
+    public int insertSample(Sample sample) {
         sample.setCreateTime(DateUtils.getNowDate());
+
+        // Try to extract addressCode from remark if present (frontend sends it there)
+        if (com.ruoyi.common.utils.StringUtils.isNotEmpty(sample.getRemark())) {
+            try {
+                com.alibaba.fastjson2.JSONObject json = com.alibaba.fastjson2.JSON.parseObject(sample.getRemark());
+                if (json.containsKey("ccode")) {
+                    sample.setAddressCode(json.getString("ccode"));
+                }
+            } catch (Exception e) {
+                // Ignore parsing errors, remark might not be JSON
+            }
+        }
+
+        // Generate sample code if not provided
+        if (com.ruoyi.common.utils.StringUtils.isEmpty(sample.getSampleCode())) {
+            try {
+                String code = sampleCodeGenerator.generateCode(sample);
+                sample.setSampleCode(code);
+            } catch (Exception e) {
+                // Log error or rethrow?
+                // For now, let it bubble up or handle gracefully if rule not found.
+                // If rule not found, maybe we shouldn't block insertion if code is optional?
+                // But user asked for automatic generation. If it fails, it should probably fail
+                // the request.
+                throw e;
+            }
+        }
         return sampleMapper.insertSample(sample);
     }
 
@@ -64,8 +90,7 @@ public class SampleServiceImpl implements ISampleService
      * @return 结果
      */
     @Override
-    public int updateSample(Sample sample)
-    {
+    public int updateSample(Sample sample) {
         sample.setUpdateTime(DateUtils.getNowDate());
         return sampleMapper.updateSample(sample);
     }
@@ -77,8 +102,7 @@ public class SampleServiceImpl implements ISampleService
      * @return 结果
      */
     @Override
-    public int deleteSampleBySampleIds(Long[] sampleIds)
-    {
+    public int deleteSampleBySampleIds(Long[] sampleIds) {
         return sampleMapper.deleteSampleBySampleIds(sampleIds);
     }
 
@@ -89,8 +113,7 @@ public class SampleServiceImpl implements ISampleService
      * @return 结果
      */
     @Override
-    public int deleteSampleBySampleId(Long sampleId)
-    {
+    public int deleteSampleBySampleId(Long sampleId) {
         return sampleMapper.deleteSampleBySampleId(sampleId);
     }
 }

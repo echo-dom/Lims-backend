@@ -9,8 +9,7 @@ import com.ruoyi.lims.domain.SampleCodeSeq;
  * @author kongdejin
  * @date 2025-11-20
  */
-public interface SampleCodeSeqMapper 
-{
+public interface SampleCodeSeqMapper {
     /**
      * 查询样品编码序列
      * 
@@ -58,4 +57,10 @@ public interface SampleCodeSeqMapper
      * @return 结果
      */
     public int deleteSampleCodeSeqBySeqIds(Long[] seqIds);
+
+    /**
+     * 查询并锁定序列
+     */
+    public SampleCodeSeq selectSampleCodeSeqForUpdate(@org.apache.ibatis.annotations.Param("ruleId") Long ruleId,
+            @org.apache.ibatis.annotations.Param("seqDate") String seqDate);
 }

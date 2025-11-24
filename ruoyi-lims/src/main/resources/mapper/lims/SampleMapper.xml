@@ -22,32 +22,43 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="remark"    column="remark"    />
+        <result property="fromFolderNo"    column="from_folder_no"    />
+        <result property="taskStatus"    column="task_status"    />
+        <result property="auditorDesc"    column="auditor_desc"    />
+        <result property="auditTime"    column="audit_time"    />
+        <result property="returnReason"    column="return_reason"    />
+        <result property="returnPerson"    column="return_person"    />
+        <result property="returnTime"    column="return_time"    />
+        <result property="originalRecordName"    column="original_record_name"    />
+        <result property="paymentStatus"    column="payment_status"    />
+        <result property="mainProNum"    column="main_pro_num"    />
+        <result property="customerName"    column="customer_name"    />
     </resultMap>
 
     <sql id="selectSampleVo">
-        select sample_id, sample_code, sample_name, sample_type_id, customer_id, batch_number, production_date, expiry_date, sampling_date, sampling_location, sample_status, storage_location, create_by, create_time, update_by, update_time, remark from lims_sample
+        select s.sample_id, s.sample_code, s.sample_name, s.sample_type_id, s.customer_id, s.batch_number, s.production_date, s.expiry_date, s.sampling_date, s.sampling_location, s.sample_status, s.storage_location, s.create_by, s.create_time, s.update_by, s.update_time, s.remark, s.from_folder_no, s.task_status, s.auditor_desc, s.audit_time, s.return_reason, s.return_person, s.return_time, s.original_record_name, s.payment_status, s.main_pro_num, c.compname as customer_name from lims_sample s left join lims_customer c on s.customer_id = c.customer_id
     </sql>
 
     <select id="selectSampleList" parameterType="Sample" resultMap="SampleResult">
         <include refid="selectSampleVo"/>
         <where>  
-            <if test="sampleCode != null  and sampleCode != ''"> and sample_code = #{sampleCode}</if>
-            <if test="sampleName != null  and sampleName != ''"> and sample_name like concat('%', #{sampleName}, '%')</if>
-            <if test="sampleTypeId != null "> and sample_type_id = #{sampleTypeId}</if>
-            <if test="customerId != null "> and customer_id = #{customerId}</if>
-            <if test="batchNumber != null  and batchNumber != ''"> and batch_number = #{batchNumber}</if>
-            <if test="productionDate != null "> and production_date = #{productionDate}</if>
-            <if test="expiryDate != null "> and expiry_date = #{expiryDate}</if>
-            <if test="samplingDate != null "> and sampling_date = #{samplingDate}</if>
-            <if test="samplingLocation != null  and samplingLocation != ''"> and sampling_location = #{samplingLocation}</if>
-            <if test="sampleStatus != null  and sampleStatus != ''"> and sample_status = #{sampleStatus}</if>
-            <if test="storageLocation != null  and storageLocation != ''"> and storage_location = #{storageLocation}</if>
+            <if test="sampleCode != null  and sampleCode != ''"> and s.sample_code = #{sampleCode}</if>
+            <if test="sampleName != null  and sampleName != ''"> and s.sample_name like concat('%', #{sampleName}, '%')</if>
+            <if test="sampleTypeId != null "> and s.sample_type_id = #{sampleTypeId}</if>
+            <if test="customerId != null "> and s.customer_id = #{customerId}</if>
+            <if test="batchNumber != null  and batchNumber != ''"> and s.batch_number = #{batchNumber}</if>
+            <if test="productionDate != null "> and s.production_date = #{productionDate}</if>
+            <if test="expiryDate != null "> and s.expiry_date = #{expiryDate}</if>
+            <if test="samplingDate != null "> and s.sampling_date = #{samplingDate}</if>
+            <if test="samplingLocation != null  and samplingLocation != ''"> and s.sampling_location = #{samplingLocation}</if>
+            <if test="sampleStatus != null  and sampleStatus != ''"> and s.sample_status = #{sampleStatus}</if>
+            <if test="storageLocation != null  and storageLocation != ''"> and s.storage_location = #{storageLocation}</if>
         </where>
     </select>
     
     <select id="selectSampleBySampleId" parameterType="Long" resultMap="SampleResult">
         <include refid="selectSampleVo"/>
-        where sample_id = #{sampleId}
+        where s.sample_id = #{sampleId}
     </select>
 
     <insert id="insertSample" parameterType="Sample" useGeneratedKeys="true" keyProperty="sampleId">
@@ -69,6 +80,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="remark != null">remark,</if>
+            <if test="fromFolderNo != null">from_folder_no,</if>
+            <if test="taskStatus != null">task_status,</if>
+            <if test="auditorDesc != null">auditor_desc,</if>
+            <if test="auditTime != null">audit_time,</if>
+            <if test="returnReason != null">return_reason,</if>
+            <if test="returnPerson != null">return_person,</if>
+            <if test="returnTime != null">return_time,</if>
+            <if test="originalRecordName != null">original_record_name,</if>
+            <if test="paymentStatus != null">payment_status,</if>
+            <if test="mainProNum != null">main_pro_num,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="sampleCode != null and sampleCode != ''">#{sampleCode},</if>
@@ -87,6 +108,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="remark != null">#{remark},</if>
+            <if test="fromFolderNo != null">#{fromFolderNo},</if>
+            <if test="taskStatus != null">#{taskStatus},</if>
+            <if test="auditorDesc != null">#{auditorDesc},</if>
+            <if test="auditTime != null">#{auditTime},</if>
+            <if test="returnReason != null">#{returnReason},</if>
+            <if test="returnPerson != null">#{returnPerson},</if>
+            <if test="returnTime != null">#{returnTime},</if>
+            <if test="originalRecordName != null">#{originalRecordName},</if>
+            <if test="paymentStatus != null">#{paymentStatus},</if>
+            <if test="mainProNum != null">#{mainProNum},</if>
          </trim>
     </insert>
 
@@ -109,6 +140,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="remark != null">remark = #{remark},</if>
+            <if test="fromFolderNo != null">from_folder_no = #{fromFolderNo},</if>
+            <if test="taskStatus != null">task_status = #{taskStatus},</if>
+            <if test="auditorDesc != null">auditor_desc = #{auditorDesc},</if>
+            <if test="auditTime != null">audit_time = #{auditTime},</if>
+            <if test="returnReason != null">return_reason = #{returnReason},</if>
+            <if test="returnPerson != null">return_person = #{returnPerson},</if>
+            <if test="returnTime != null">return_time = #{returnTime},</if>
+            <if test="originalRecordName != null">original_record_name = #{originalRecordName},</if>
+            <if test="paymentStatus != null">payment_status = #{paymentStatus},</if>
+            <if test="mainProNum != null">main_pro_num = #{mainProNum},</if>
         </trim>
         where sample_id = #{sampleId}
     </update>

@@ -15,8 +15,7 @@ import com.ruoyi.lims.service.ISampleCodeRuleService;
  * @date 2025-11-20
  */
 @Service
-public class SampleCodeRuleServiceImpl implements ISampleCodeRuleService 
-{
+public class SampleCodeRuleServiceImpl implements ISampleCodeRuleService {
     @Autowired
     private SampleCodeRuleMapper sampleCodeRuleMapper;
 
@@ -27,8 +26,7 @@ public class SampleCodeRuleServiceImpl implements ISampleCodeRuleService
      * @return 样品编码规则
      */
     @Override
-    public SampleCodeRule selectSampleCodeRuleByRuleId(Long ruleId)
-    {
+    public SampleCodeRule selectSampleCodeRuleByRuleId(Long ruleId) {
         return sampleCodeRuleMapper.selectSampleCodeRuleByRuleId(ruleId);
     }
 
@@ -39,8 +37,7 @@ public class SampleCodeRuleServiceImpl implements ISampleCodeRuleService
      * @return 样品编码规则
      */
     @Override
-    public List<SampleCodeRule> selectSampleCodeRuleList(SampleCodeRule sampleCodeRule)
-    {
+    public List<SampleCodeRule> selectSampleCodeRuleList(SampleCodeRule sampleCodeRule) {
         return sampleCodeRuleMapper.selectSampleCodeRuleList(sampleCodeRule);
     }
 
@@ -51,8 +48,7 @@ public class SampleCodeRuleServiceImpl implements ISampleCodeRuleService
      * @return 结果
      */
     @Override
-    public int insertSampleCodeRule(SampleCodeRule sampleCodeRule)
-    {
+    public int insertSampleCodeRule(SampleCodeRule sampleCodeRule) {
         sampleCodeRule.setCreateTime(DateUtils.getNowDate());
         return sampleCodeRuleMapper.insertSampleCodeRule(sampleCodeRule);
     }
@@ -64,8 +60,7 @@ public class SampleCodeRuleServiceImpl implements ISampleCodeRuleService
      * @return 结果
      */
     @Override
-    public int updateSampleCodeRule(SampleCodeRule sampleCodeRule)
-    {
+    public int updateSampleCodeRule(SampleCodeRule sampleCodeRule) {
         sampleCodeRule.setUpdateTime(DateUtils.getNowDate());
         return sampleCodeRuleMapper.updateSampleCodeRule(sampleCodeRule);
     }
@@ -77,8 +72,7 @@ public class SampleCodeRuleServiceImpl implements ISampleCodeRuleService
      * @return 结果
      */
     @Override
-    public int deleteSampleCodeRuleByRuleIds(Long[] ruleIds)
-    {
+    public int deleteSampleCodeRuleByRuleIds(Long[] ruleIds) {
         return sampleCodeRuleMapper.deleteSampleCodeRuleByRuleIds(ruleIds);
     }
 
@@ -89,8 +83,53 @@ public class SampleCodeRuleServiceImpl implements ISampleCodeRuleService
      * @return 结果
      */
     @Override
-    public int deleteSampleCodeRuleByRuleId(Long ruleId)
-    {
+    public int deleteSampleCodeRuleByRuleId(Long ruleId) {
         return sampleCodeRuleMapper.deleteSampleCodeRuleByRuleId(ruleId);
+    }
+
+    /**
+     * 匹配最佳样品编码规则
+     * 
+     * @param sampleTypeId 样品类型ID
+     * @param customerId   客户ID
+     * @return 规则对象
+     */
+    @Override
+    public SampleCodeRule selectMatchRule(Long sampleTypeId, Long customerId) {
+        SampleCodeRule query = new SampleCodeRule();
+        query.setStatus("0");
+        List<SampleCodeRule> rules = sampleCodeRuleMapper.selectSampleCodeRuleList(query);
+
+        // 1. Match both
+        for (SampleCodeRule rule : rules) {
+            if (isMatch(sampleTypeId, rule.getSampleTypeId()) && isMatch(customerId, rule.getCustomerId())) {
+                return rule;
+            }
+        }
+        // 2. Match sampleType only
+        for (SampleCodeRule rule : rules) {
+            if (isMatch(sampleTypeId, rule.getSampleTypeId()) && rule.getCustomerId() == null) {
+                return rule;
+            }
+        }
+        // 3. Match customer only
+        for (SampleCodeRule rule : rules) {
+            if (rule.getSampleTypeId() == null && isMatch(customerId, rule.getCustomerId())) {
+                return rule;
+            }
+        }
+        // 4. Global default
+        for (SampleCodeRule rule : rules) {
+            if (rule.getSampleTypeId() == null && rule.getCustomerId() == null) {
+                return rule;
+            }
+        }
+        return null;
+    }
+
+    private boolean isMatch(Long id1, Long id2) {
+        if (id1 == null)
+            return id2 == null;
+        return id1.equals(id2);
     }
 }

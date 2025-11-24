@@ -71,4 +71,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{seqId}
         </foreach>
     </delete>
+
+    <select id="selectSampleCodeSeqForUpdate" resultMap="SampleCodeSeqResult">
+        <include refid="selectSampleCodeSeqVo"/>
+        where rule_id = #{ruleId} and seq_date = #{seqDate}
+        for update
+    </select>
 </mapper>
