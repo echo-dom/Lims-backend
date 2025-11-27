@@ -9,10 +9,10 @@ import com.ruoyi.lims.domain.Tests;
 import com.ruoyi.lims.service.ITestsService;
 
 /**
- * 检验项目（LIMS_TESTS）Service业务层处理
+ * 测试项目Service业务层处理
  * 
  * @author kongdejin
- * @date 2025-06-17
+ * @date 2025-11-24
  */
 @Service
 public class TestsServiceImpl implements ITestsService 
@@ -21,22 +21,22 @@ public class TestsServiceImpl implements ITestsService
     private TestsMapper testsMapper;
 
     /**
-     * 查询检验项目（LIMS_TESTS）
+     * 查询测试项目
      * 
-     * @param TESTSID 检验项目（LIMS_TESTS）主键
-     * @return 检验项目（LIMS_TESTS）
+     * @param testId 测试项目主键
+     * @return 测试项目
      */
     @Override
-    public Tests selectTestsByTESTSID(String TESTSID)
+    public Tests selectTestsByTestId(Long testId)
     {
-        return testsMapper.selectTestsByTESTSID(TESTSID);
+        return testsMapper.selectTestsByTestId(testId);
     }
 
     /**
-     * 查询检验项目（LIMS_TESTS）列表
+     * 查询测试项目列表
      * 
-     * @param tests 检验项目（LIMS_TESTS）
-     * @return 检验项目（LIMS_TESTS）
+     * @param tests 测试项目
+     * @return 测试项目
      */
     @Override
     public List<Tests> selectTestsList(Tests tests)
@@ -45,9 +45,9 @@ public class TestsServiceImpl implements ITestsService
     }
 
     /**
-     * 新增检验项目（LIMS_TESTS）
+     * 新增测试项目
      * 
-     * @param tests 检验项目（LIMS_TESTS）
+     * @param tests 测试项目
      * @return 结果
      */
     @Override
@@ -58,9 +58,9 @@ public class TestsServiceImpl implements ITestsService
     }
 
     /**
-     * 修改检验项目（LIMS_TESTS）
+     * 修改测试项目
      * 
-     * @param tests 检验项目（LIMS_TESTS）
+     * @param tests 测试项目
      * @return 结果
      */
     @Override
@@ -71,26 +71,26 @@ public class TestsServiceImpl implements ITestsService
     }
 
     /**
-     * 批量删除检验项目（LIMS_TESTS）
+     * 批量删除测试项目
      * 
-     * @param TESTSIDs 需要删除的检验项目（LIMS_TESTS）主键
+     * @param testIds 需要删除的测试项目主键
      * @return 结果
      */
     @Override
-    public int deleteTestsByTESTSIDs(String[] TESTSIDs)
+    public int deleteTestsByTestIds(Long[] testIds)
     {
-        return testsMapper.deleteTestsByTESTSIDs(TESTSIDs);
+        return testsMapper.deleteTestsByTestIds(testIds);
     }
 
     /**
-     * 删除检验项目（LIMS_TESTS）信息
+     * 删除测试项目信息
      * 
-     * @param TESTSID 检验项目（LIMS_TESTS）主键
+     * @param testId 测试项目主键
      * @return 结果
      */
     @Override
-    public int deleteTestsByTESTSID(String TESTSID)
+    public int deleteTestsByTestId(Long testId)
     {
-        return testsMapper.deleteTestsByTESTSID(TESTSID);
+        return testsMapper.deleteTestsByTestId(testId);
     }
 }

@@ -28,7 +28,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @date 2025-11-24
  */
 @RestController
-@RequestMapping("/lims/tests")
+@RequestMapping("/lims/sp_tests")
 public class SpTestsController extends BaseController
 {
     @Autowired
@@ -37,7 +37,7 @@ public class SpTestsController extends BaseController
     /**
      * 查询方案项目列表
      */
-    @PreAuthorize("@ss.hasPermi('lims:tests:list')")
+    @PreAuthorize("@ss.hasPermi('lims:sp_tests:list')")
     @GetMapping("/list")
     public TableDataInfo list(SpTests spTests)
     {
@@ -49,7 +49,7 @@ public class SpTestsController extends BaseController
     /**
      * 导出方案项目列表
      */
-    @PreAuthorize("@ss.hasPermi('lims:tests:export')")
+    @PreAuthorize("@ss.hasPermi('lims:sp_tests:export')")
     @Log(title = "方案项目", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, SpTests spTests)
@@ -62,7 +62,7 @@ public class SpTestsController extends BaseController
     /**
      * 获取方案项目详细信息
      */
-    @PreAuthorize("@ss.hasPermi('lims:tests:query')")
+    @PreAuthorize("@ss.hasPermi('lims:sp_tests:query')")
     @GetMapping(value = "/{spTestsId}")
     public AjaxResult getInfo(@PathVariable("spTestsId") Long spTestsId)
     {
@@ -72,7 +72,7 @@ public class SpTestsController extends BaseController
     /**
      * 新增方案项目
      */
-    @PreAuthorize("@ss.hasPermi('lims:tests:add')")
+    @PreAuthorize("@ss.hasPermi('lims:sp_tests:add')")
     @Log(title = "方案项目", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody SpTests spTests)
@@ -83,7 +83,7 @@ public class SpTestsController extends BaseController
     /**
      * 修改方案项目
      */
-    @PreAuthorize("@ss.hasPermi('lims:tests:edit')")
+    @PreAuthorize("@ss.hasPermi('lims:sp_tests:edit')")
     @Log(title = "方案项目", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody SpTests spTests)
@@ -94,7 +94,7 @@ public class SpTestsController extends BaseController
     /**
      * 删除方案项目
      */
-    @PreAuthorize("@ss.hasPermi('lims:tests:remove')")
+    @PreAuthorize("@ss.hasPermi('lims:sp_tests:remove')")
     @Log(title = "方案项目", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{spTestsIds}")
     public AjaxResult remove(@PathVariable Long[] spTestsIds)

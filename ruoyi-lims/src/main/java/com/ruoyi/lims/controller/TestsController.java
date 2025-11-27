@@ -22,10 +22,10 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
- * 检验项目（LIMS_TESTS）Controller
+ * 测试项目Controller
  * 
  * @author kongdejin
- * @date 2025-06-17
+ * @date 2025-11-24
  */
 @RestController
 @RequestMapping("/lims/tests")
@@ -35,7 +35,7 @@ public class TestsController extends BaseController
     private ITestsService testsService;
 
     /**
-     * 查询检验项目（LIMS_TESTS）列表
+     * 查询测试项目列表
      */
     @PreAuthorize("@ss.hasPermi('lims:tests:list')")
     @GetMapping("/list")
@@ -47,33 +47,33 @@ public class TestsController extends BaseController
     }
 
     /**
-     * 导出检验项目（LIMS_TESTS）列表
+     * 导出测试项目列表
      */
     @PreAuthorize("@ss.hasPermi('lims:tests:export')")
-    @Log(title = "检验项目（LIMS_TESTS）", businessType = BusinessType.EXPORT)
+    @Log(title = "测试项目", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, Tests tests)
     {
         List<Tests> list = testsService.selectTestsList(tests);
         ExcelUtil<Tests> util = new ExcelUtil<Tests>(Tests.class);
-        util.exportExcel(response, list, "检验项目（LIMS_TESTS）数据");
+        util.exportExcel(response, list, "测试项目数据");
     }
 
     /**
-     * 获取检验项目（LIMS_TESTS）详细信息
+     * 获取测试项目详细信息
      */
     @PreAuthorize("@ss.hasPermi('lims:tests:query')")
-    @GetMapping(value = "/{TESTSID}")
-    public AjaxResult getInfo(@PathVariable("TESTSID") String TESTSID)
+    @GetMapping(value = "/{testId}")
+    public AjaxResult getInfo(@PathVariable("testId") Long testId)
     {
-        return success(testsService.selectTestsByTESTSID(TESTSID));
+        return success(testsService.selectTestsByTestId(testId));
     }
 
     /**
-     * 新增检验项目（LIMS_TESTS）
+     * 新增测试项目
      */
     @PreAuthorize("@ss.hasPermi('lims:tests:add')")
-    @Log(title = "检验项目（LIMS_TESTS）", businessType = BusinessType.INSERT)
+    @Log(title = "测试项目", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Tests tests)
     {
@@ -81,10 +81,10 @@ public class TestsController extends BaseController
     }
 
     /**
-     * 修改检验项目（LIMS_TESTS）
+     * 修改测试项目
      */
     @PreAuthorize("@ss.hasPermi('lims:tests:edit')")
-    @Log(title = "检验项目（LIMS_TESTS）", businessType = BusinessType.UPDATE)
+    @Log(title = "测试项目", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Tests tests)
     {
@@ -92,13 +92,13 @@ public class TestsController extends BaseController
     }
 
     /**
-     * 删除检验项目（LIMS_TESTS）
+     * 删除测试项目
      */
     @PreAuthorize("@ss.hasPermi('lims:tests:remove')")
-    @Log(title = "检验项目（LIMS_TESTS）", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{TESTSIDs}")
-    public AjaxResult remove(@PathVariable String[] TESTSIDs)
+    @Log(title = "测试项目", businessType = BusinessType.DELETE)
+	@DeleteMapping("/{testIds}")
+    public AjaxResult remove(@PathVariable Long[] testIds)
     {
-        return toAjax(testsService.deleteTestsByTESTSIDs(TESTSIDs));
+        return toAjax(testsService.deleteTestsByTestIds(testIds));
     }
 }

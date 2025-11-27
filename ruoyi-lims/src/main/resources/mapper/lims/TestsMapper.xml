@@ -5,140 +5,296 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.ruoyi.lims.mapper.TestsMapper">
     
     <resultMap type="Tests" id="TestsResult">
-        <result property="TESTSID"    column="TESTSID"    />
-        <result property="SORTER"    column="SORTER"    />
-        <result property="TESTCODE"    column="TESTCODE"    />
-        <result property="TESTNAME"    column="TESTNAME"    />
-        <result property="TESTEXPLAIN"    column="TESTEXPLAIN"    />
-        <result property="SPELLSIMPLIFY"    column="SPELLSIMPLIFY"    />
-        <result property="FULLTYPE"    column="FULLTYPE"    />
-        <result property="DOMAINID"    column="DOMAINID"    />
-        <result property="TESTCATEGORYID"    column="TESTCATEGORYID"    />
-        <result property="TESTCATENAME"    column="TESTCATENAME"    />
-        <result property="wswflag"    column="wswflag"    />
-        <result property="NAMEINREPORT"    column="NAMEINREPORT"    />
-        <result property="ORIGINALCODE"    column="ORIGINALCODE"    />
-        <result property="samplingMethod"    column="SAMPLING_METHOD"    />
-        <result property="HISTORYPERSON"    column="HISTORYPERSON"    />
-        <result property="DEPT"    column="DEPT"    />
-        <result property="STATUS"    column="STATUS"    />
-        <result property="RECORDERCODE"    column="RECORDERCODE"    />
+        <result property="testId"    column="test_id"    />
+        <result property="originalId"    column="original_id"    />
+        <result property="testCode"    column="test_code"    />
+        <result property="testName"    column="test_name"    />
+        <result property="gcTestName"    column="gc_test_name"    />
+        <result property="originalCode"    column="original_code"    />
+        <result property="domainId"    column="domain_id"    />
+        <result property="testCategoryId"    column="test_category_id"    />
+        <result property="testCateName"    column="test_cate_name"    />
+        <result property="fullType"    column="full_type"    />
+        <result property="testGroup"    column="test_group"    />
+        <result property="nameInReport"    column="name_in_report"    />
+        <result property="spellSimplify"    column="spell_simplify"    />
+        <result property="reportTestNo"    column="report_test_no"    />
+        <result property="testItems"    column="test_items"    />
+        <result property="testExplain"    column="test_explain"    />
+        <result property="samplingMethod"    column="sampling_method"    />
+        <result property="tPrice"    column="t_price"    />
+        <result property="unit"    column="unit"    />
+        <result property="cma"    column="cma"    />
+        <result property="cnas"    column="cnas"    />
+        <result property="dept"    column="dept"    />
+        <result property="ccId"    column="cc_id"    />
+        <result property="submitCorp"    column="submit_corp"    />
+        <result property="envSampleSaveCode"    column="env_sample_save_code"    />
+        <result property="envSampleSaveCon"    column="env_sample_save_con"    />
+        <result property="envSampleSaveDate"    column="env_sample_save_date"    />
+        <result property="status"    column="status"    />
+        <result property="freezeFlag"    column="freeze_flag"    />
+        <result property="dispStatus"    column="disp_status"    />
+        <result property="wswFlag"    column="wsw_flag"    />
+        <result property="auditFlag"    column="audit_flag"    />
+        <result property="auditLevel"    column="audit_level"    />
+        <result property="rowAudit"    column="row_audit"    />
+        <result property="auditorCode"    column="auditor_code"    />
+        <result property="auditTime"    column="audit_time"    />
+        <result property="workflowId"    column="workflow_id"    />
+        <result property="version"    column="version"    />
+        <result property="sorter"    column="sorter"    />
+        <result property="recorderDesc"    column="recorder_desc"    />
+        <result property="historyPerson"    column="history_person"    />
+        <result property="addPerson"    column="add_person"    />
+        <result property="addDate"    column="add_date"    />
+        <result property="freezerCode"    column="freezer_code"    />
+        <result property="freezerDesc"    column="freezer_desc"    />
+        <result property="freezeTime"    column="freeze_time"    />
+        <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="delFlag"    column="del_flag"    />
     </resultMap>
 
     <sql id="selectTestsVo">
-        select TESTSID, SORTER, TESTCODE, TESTNAME, TESTEXPLAIN, SPELLSIMPLIFY, FULLTYPE, DOMAINID, TESTCATEGORYID, TESTCATENAME, wswflag, NAMEINREPORT, ORIGINALCODE, SAMPLING_METHOD, HISTORYPERSON, DEPT, STATUS, RECORDERCODE, create_time, update_time from lims_tests
+        select test_id, original_id, test_code, test_name, gc_test_name, original_code, domain_id, test_category_id, test_cate_name, full_type, test_group, name_in_report, spell_simplify, report_test_no, test_items, test_explain, sampling_method, t_price, unit, cma, cnas, dept, cc_id, submit_corp, env_sample_save_code, env_sample_save_con, env_sample_save_date, status, freeze_flag, disp_status, wsw_flag, audit_flag, audit_level, row_audit, auditor_code, audit_time, workflow_id, version, sorter, recorder_desc, history_person, add_person, add_date, freezer_code, freezer_desc, freeze_time, create_by, create_time, update_by, update_time, remark, del_flag from lims_tests
     </sql>
 
     <select id="selectTestsList" parameterType="Tests" resultMap="TestsResult">
         <include refid="selectTestsVo"/>
         <where>  
-            <if test="SORTER != null "> and SORTER = #{SORTER}</if>
-            <if test="TESTCODE != null  and TESTCODE != ''"> and TESTCODE like concat('%', #{TESTCODE}, '%')</if>
-            <if test="TESTNAME != null  and TESTNAME != ''"> and TESTNAME like concat('%', #{TESTNAME}, '%')</if>
-            <if test="TESTEXPLAIN != null  and TESTEXPLAIN != ''"> and TESTEXPLAIN = #{TESTEXPLAIN}</if>
-            <if test="SPELLSIMPLIFY != null  and SPELLSIMPLIFY != ''"> and SPELLSIMPLIFY = #{SPELLSIMPLIFY}</if>
-            <if test="FULLTYPE != null  and FULLTYPE != ''"> and FULLTYPE = #{FULLTYPE}</if>
-            <if test="DOMAINID != null  and DOMAINID != ''"> and DOMAINID = #{DOMAINID}</if>
-            <if test="TESTCATEGORYID != null  and TESTCATEGORYID != ''"> and TESTCATEGORYID = #{TESTCATEGORYID}</if>
-            <if test="TESTCATENAME != null  and TESTCATENAME != ''"> and TESTCATENAME like concat('%', #{TESTCATENAME}, '%')</if>
-            <if test="wswflag != null "> and wswflag = #{wswflag}</if>
-            <if test="NAMEINREPORT != null  and NAMEINREPORT != ''"> and NAMEINREPORT = #{NAMEINREPORT}</if>
-            <if test="ORIGINALCODE != null  and ORIGINALCODE != ''"> and ORIGINALCODE = #{ORIGINALCODE}</if>
-            <if test="samplingMethod != null  and samplingMethod != ''"> and SAMPLING_METHOD = #{samplingMethod}</if>
-            <if test="HISTORYPERSON != null  and HISTORYPERSON != ''"> and HISTORYPERSON = #{HISTORYPERSON}</if>
-            <if test="DEPT != null  and DEPT != ''"> and DEPT = #{DEPT}</if>
-            <if test="STATUS != null  and STATUS != ''"> and STATUS = #{STATUS}</if>
-            <if test="RECORDERCODE != null  and RECORDERCODE != ''"> and RECORDERCODE = #{RECORDERCODE}</if>
+            <if test="originalId != null  and originalId != ''"> and original_id = #{originalId}</if>
+            <if test="testCode != null  and testCode != ''"> and test_code = #{testCode}</if>
+            <if test="testName != null  and testName != ''"> and test_name like concat('%', #{testName}, '%')</if>
+            <if test="gcTestName != null  and gcTestName != ''"> and gc_test_name like concat('%', #{gcTestName}, '%')</if>
+            <if test="originalCode != null  and originalCode != ''"> and original_code = #{originalCode}</if>
+            <if test="domainId != null  and domainId != ''"> and domain_id = #{domainId}</if>
+            <if test="testCategoryId != null  and testCategoryId != ''"> and test_category_id = #{testCategoryId}</if>
+            <if test="testCateName != null  and testCateName != ''"> and test_cate_name like concat('%', #{testCateName}, '%')</if>
+            <if test="fullType != null  and fullType != ''"> and full_type = #{fullType}</if>
+            <if test="testGroup != null  and testGroup != ''"> and test_group = #{testGroup}</if>
+            <if test="nameInReport != null  and nameInReport != ''"> and name_in_report = #{nameInReport}</if>
+            <if test="spellSimplify != null  and spellSimplify != ''"> and spell_simplify = #{spellSimplify}</if>
+            <if test="reportTestNo != null  and reportTestNo != ''"> and report_test_no = #{reportTestNo}</if>
+            <if test="testItems != null  and testItems != ''"> and test_items = #{testItems}</if>
+            <if test="testExplain != null  and testExplain != ''"> and test_explain = #{testExplain}</if>
+            <if test="samplingMethod != null  and samplingMethod != ''"> and sampling_method = #{samplingMethod}</if>
+            <if test="tPrice != null "> and t_price = #{tPrice}</if>
+            <if test="unit != null  and unit != ''"> and unit = #{unit}</if>
+            <if test="cma != null  and cma != ''"> and cma = #{cma}</if>
+            <if test="cnas != null  and cnas != ''"> and cnas = #{cnas}</if>
+            <if test="dept != null  and dept != ''"> and dept = #{dept}</if>
+            <if test="ccId != null  and ccId != ''"> and cc_id = #{ccId}</if>
+            <if test="submitCorp != null  and submitCorp != ''"> and submit_corp = #{submitCorp}</if>
+            <if test="envSampleSaveCode != null  and envSampleSaveCode != ''"> and env_sample_save_code = #{envSampleSaveCode}</if>
+            <if test="envSampleSaveCon != null  and envSampleSaveCon != ''"> and env_sample_save_con = #{envSampleSaveCon}</if>
+            <if test="envSampleSaveDate != null  and envSampleSaveDate != ''"> and env_sample_save_date = #{envSampleSaveDate}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="freezeFlag != null  and freezeFlag != ''"> and freeze_flag = #{freezeFlag}</if>
+            <if test="dispStatus != null  and dispStatus != ''"> and disp_status = #{dispStatus}</if>
+            <if test="wswFlag != null  and wswFlag != ''"> and wsw_flag = #{wswFlag}</if>
+            <if test="auditFlag != null  and auditFlag != ''"> and audit_flag = #{auditFlag}</if>
+            <if test="auditLevel != null  and auditLevel != ''"> and audit_level = #{auditLevel}</if>
+            <if test="rowAudit != null  and rowAudit != ''"> and row_audit = #{rowAudit}</if>
+            <if test="auditorCode != null  and auditorCode != ''"> and auditor_code = #{auditorCode}</if>
+            <if test="auditTime != null "> and audit_time = #{auditTime}</if>
+            <if test="workflowId != null  and workflowId != ''"> and workflow_id = #{workflowId}</if>
+            <if test="version != null  and version != ''"> and version = #{version}</if>
+            <if test="sorter != null "> and sorter = #{sorter}</if>
+            <if test="recorderDesc != null  and recorderDesc != ''"> and recorder_desc = #{recorderDesc}</if>
+            <if test="historyPerson != null  and historyPerson != ''"> and history_person = #{historyPerson}</if>
+            <if test="addPerson != null  and addPerson != ''"> and add_person = #{addPerson}</if>
+            <if test="addDate != null "> and add_date = #{addDate}</if>
+            <if test="freezerCode != null  and freezerCode != ''"> and freezer_code = #{freezerCode}</if>
+            <if test="freezerDesc != null  and freezerDesc != ''"> and freezer_desc = #{freezerDesc}</if>
+            <if test="freezeTime != null "> and freeze_time = #{freezeTime}</if>
         </where>
     </select>
     
-    <select id="selectTestsByTESTSID" parameterType="Long" resultMap="TestsResult">
+    <select id="selectTestsByTestId" parameterType="Long" resultMap="TestsResult">
         <include refid="selectTestsVo"/>
-        where TESTSID = #{TESTSID}
+        where test_id = #{testId}
     </select>
 
-    <insert id="insertTests" parameterType="Tests" useGeneratedKeys="true" keyProperty="TESTSID">
+    <insert id="insertTests" parameterType="Tests" useGeneratedKeys="true" keyProperty="testId">
         insert into lims_tests
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="SORTER != null">SORTER,</if>
-            <if test="TESTCODE != null and TESTCODE != ''">TESTCODE,</if>
-            <if test="TESTNAME != null and TESTNAME != ''">TESTNAME,</if>
-            <if test="TESTEXPLAIN != null">TESTEXPLAIN,</if>
-            <if test="SPELLSIMPLIFY != null">SPELLSIMPLIFY,</if>
-            <if test="FULLTYPE != null">FULLTYPE,</if>
-            <if test="DOMAINID != null">DOMAINID,</if>
-            <if test="TESTCATEGORYID != null">TESTCATEGORYID,</if>
-            <if test="TESTCATENAME != null">TESTCATENAME,</if>
-            <if test="wswflag != null">wswflag,</if>
-            <if test="NAMEINREPORT != null">NAMEINREPORT,</if>
-            <if test="ORIGINALCODE != null">ORIGINALCODE,</if>
-            <if test="samplingMethod != null">SAMPLING_METHOD,</if>
-            <if test="HISTORYPERSON != null">HISTORYPERSON,</if>
-            <if test="DEPT != null and DEPT != ''">DEPT,</if>
-            <if test="STATUS != null">STATUS,</if>
-            <if test="RECORDERCODE != null">RECORDERCODE,</if>
+            <if test="originalId != null">original_id,</if>
+            <if test="testCode != null and testCode != ''">test_code,</if>
+            <if test="testName != null and testName != ''">test_name,</if>
+            <if test="gcTestName != null">gc_test_name,</if>
+            <if test="originalCode != null">original_code,</if>
+            <if test="domainId != null">domain_id,</if>
+            <if test="testCategoryId != null">test_category_id,</if>
+            <if test="testCateName != null">test_cate_name,</if>
+            <if test="fullType != null">full_type,</if>
+            <if test="testGroup != null">test_group,</if>
+            <if test="nameInReport != null">name_in_report,</if>
+            <if test="spellSimplify != null">spell_simplify,</if>
+            <if test="reportTestNo != null">report_test_no,</if>
+            <if test="testItems != null">test_items,</if>
+            <if test="testExplain != null">test_explain,</if>
+            <if test="samplingMethod != null">sampling_method,</if>
+            <if test="tPrice != null">t_price,</if>
+            <if test="unit != null">unit,</if>
+            <if test="cma != null">cma,</if>
+            <if test="cnas != null">cnas,</if>
+            <if test="dept != null">dept,</if>
+            <if test="ccId != null">cc_id,</if>
+            <if test="submitCorp != null">submit_corp,</if>
+            <if test="envSampleSaveCode != null">env_sample_save_code,</if>
+            <if test="envSampleSaveCon != null">env_sample_save_con,</if>
+            <if test="envSampleSaveDate != null">env_sample_save_date,</if>
+            <if test="status != null">status,</if>
+            <if test="freezeFlag != null">freeze_flag,</if>
+            <if test="dispStatus != null">disp_status,</if>
+            <if test="wswFlag != null">wsw_flag,</if>
+            <if test="auditFlag != null">audit_flag,</if>
+            <if test="auditLevel != null">audit_level,</if>
+            <if test="rowAudit != null">row_audit,</if>
+            <if test="auditorCode != null">auditor_code,</if>
+            <if test="auditTime != null">audit_time,</if>
+            <if test="workflowId != null">workflow_id,</if>
+            <if test="version != null">version,</if>
+            <if test="sorter != null">sorter,</if>
+            <if test="recorderDesc != null">recorder_desc,</if>
+            <if test="historyPerson != null">history_person,</if>
+            <if test="addPerson != null">add_person,</if>
+            <if test="addDate != null">add_date,</if>
+            <if test="freezerCode != null">freezer_code,</if>
+            <if test="freezerDesc != null">freezer_desc,</if>
+            <if test="freezeTime != null">freeze_time,</if>
+            <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="delFlag != null">del_flag,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="SORTER != null">#{SORTER},</if>
-            <if test="TESTCODE != null and TESTCODE != ''">#{TESTCODE},</if>
-            <if test="TESTNAME != null and TESTNAME != ''">#{TESTNAME},</if>
-            <if test="TESTEXPLAIN != null">#{TESTEXPLAIN},</if>
-            <if test="SPELLSIMPLIFY != null">#{SPELLSIMPLIFY},</if>
-            <if test="FULLTYPE != null">#{FULLTYPE},</if>
-            <if test="DOMAINID != null">#{DOMAINID},</if>
-            <if test="TESTCATEGORYID != null">#{TESTCATEGORYID},</if>
-            <if test="TESTCATENAME != null">#{TESTCATENAME},</if>
-            <if test="wswflag != null">#{wswflag},</if>
-            <if test="NAMEINREPORT != null">#{NAMEINREPORT},</if>
-            <if test="ORIGINALCODE != null">#{ORIGINALCODE},</if>
+            <if test="originalId != null">#{originalId},</if>
+            <if test="testCode != null and testCode != ''">#{testCode},</if>
+            <if test="testName != null and testName != ''">#{testName},</if>
+            <if test="gcTestName != null">#{gcTestName},</if>
+            <if test="originalCode != null">#{originalCode},</if>
+            <if test="domainId != null">#{domainId},</if>
+            <if test="testCategoryId != null">#{testCategoryId},</if>
+            <if test="testCateName != null">#{testCateName},</if>
+            <if test="fullType != null">#{fullType},</if>
+            <if test="testGroup != null">#{testGroup},</if>
+            <if test="nameInReport != null">#{nameInReport},</if>
+            <if test="spellSimplify != null">#{spellSimplify},</if>
+            <if test="reportTestNo != null">#{reportTestNo},</if>
+            <if test="testItems != null">#{testItems},</if>
+            <if test="testExplain != null">#{testExplain},</if>
             <if test="samplingMethod != null">#{samplingMethod},</if>
-            <if test="HISTORYPERSON != null">#{HISTORYPERSON},</if>
-            <if test="DEPT != null and DEPT != ''">#{DEPT},</if>
-            <if test="STATUS != null">#{STATUS},</if>
-            <if test="RECORDERCODE != null">#{RECORDERCODE},</if>
+            <if test="tPrice != null">#{tPrice},</if>
+            <if test="unit != null">#{unit},</if>
+            <if test="cma != null">#{cma},</if>
+            <if test="cnas != null">#{cnas},</if>
+            <if test="dept != null">#{dept},</if>
+            <if test="ccId != null">#{ccId},</if>
+            <if test="submitCorp != null">#{submitCorp},</if>
+            <if test="envSampleSaveCode != null">#{envSampleSaveCode},</if>
+            <if test="envSampleSaveCon != null">#{envSampleSaveCon},</if>
+            <if test="envSampleSaveDate != null">#{envSampleSaveDate},</if>
+            <if test="status != null">#{status},</if>
+            <if test="freezeFlag != null">#{freezeFlag},</if>
+            <if test="dispStatus != null">#{dispStatus},</if>
+            <if test="wswFlag != null">#{wswFlag},</if>
+            <if test="auditFlag != null">#{auditFlag},</if>
+            <if test="auditLevel != null">#{auditLevel},</if>
+            <if test="rowAudit != null">#{rowAudit},</if>
+            <if test="auditorCode != null">#{auditorCode},</if>
+            <if test="auditTime != null">#{auditTime},</if>
+            <if test="workflowId != null">#{workflowId},</if>
+            <if test="version != null">#{version},</if>
+            <if test="sorter != null">#{sorter},</if>
+            <if test="recorderDesc != null">#{recorderDesc},</if>
+            <if test="historyPerson != null">#{historyPerson},</if>
+            <if test="addPerson != null">#{addPerson},</if>
+            <if test="addDate != null">#{addDate},</if>
+            <if test="freezerCode != null">#{freezerCode},</if>
+            <if test="freezerDesc != null">#{freezerDesc},</if>
+            <if test="freezeTime != null">#{freezeTime},</if>
+            <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="delFlag != null">#{delFlag},</if>
          </trim>
     </insert>
 
     <update id="updateTests" parameterType="Tests">
         update lims_tests
         <trim prefix="SET" suffixOverrides=",">
-            <if test="SORTER != null">SORTER = #{SORTER},</if>
-            <if test="TESTCODE != null and TESTCODE != ''">TESTCODE = #{TESTCODE},</if>
-            <if test="TESTNAME != null and TESTNAME != ''">TESTNAME = #{TESTNAME},</if>
-            <if test="TESTEXPLAIN != null">TESTEXPLAIN = #{TESTEXPLAIN},</if>
-            <if test="SPELLSIMPLIFY != null">SPELLSIMPLIFY = #{SPELLSIMPLIFY},</if>
-            <if test="FULLTYPE != null">FULLTYPE = #{FULLTYPE},</if>
-            <if test="DOMAINID != null">DOMAINID = #{DOMAINID},</if>
-            <if test="TESTCATEGORYID != null">TESTCATEGORYID = #{TESTCATEGORYID},</if>
-            <if test="TESTCATENAME != null">TESTCATENAME = #{TESTCATENAME},</if>
-            <if test="wswflag != null">wswflag = #{wswflag},</if>
-            <if test="NAMEINREPORT != null">NAMEINREPORT = #{NAMEINREPORT},</if>
-            <if test="ORIGINALCODE != null">ORIGINALCODE = #{ORIGINALCODE},</if>
-            <if test="samplingMethod != null">SAMPLING_METHOD = #{samplingMethod},</if>
-            <if test="HISTORYPERSON != null">HISTORYPERSON = #{HISTORYPERSON},</if>
-            <if test="DEPT != null and DEPT != ''">DEPT = #{DEPT},</if>
-            <if test="STATUS != null">STATUS = #{STATUS},</if>
-            <if test="RECORDERCODE != null">RECORDERCODE = #{RECORDERCODE},</if>
+            <if test="originalId != null">original_id = #{originalId},</if>
+            <if test="testCode != null and testCode != ''">test_code = #{testCode},</if>
+            <if test="testName != null and testName != ''">test_name = #{testName},</if>
+            <if test="gcTestName != null">gc_test_name = #{gcTestName},</if>
+            <if test="originalCode != null">original_code = #{originalCode},</if>
+            <if test="domainId != null">domain_id = #{domainId},</if>
+            <if test="testCategoryId != null">test_category_id = #{testCategoryId},</if>
+            <if test="testCateName != null">test_cate_name = #{testCateName},</if>
+            <if test="fullType != null">full_type = #{fullType},</if>
+            <if test="testGroup != null">test_group = #{testGroup},</if>
+            <if test="nameInReport != null">name_in_report = #{nameInReport},</if>
+            <if test="spellSimplify != null">spell_simplify = #{spellSimplify},</if>
+            <if test="reportTestNo != null">report_test_no = #{reportTestNo},</if>
+            <if test="testItems != null">test_items = #{testItems},</if>
+            <if test="testExplain != null">test_explain = #{testExplain},</if>
+            <if test="samplingMethod != null">sampling_method = #{samplingMethod},</if>
+            <if test="tPrice != null">t_price = #{tPrice},</if>
+            <if test="unit != null">unit = #{unit},</if>
+            <if test="cma != null">cma = #{cma},</if>
+            <if test="cnas != null">cnas = #{cnas},</if>
+            <if test="dept != null">dept = #{dept},</if>
+            <if test="ccId != null">cc_id = #{ccId},</if>
+            <if test="submitCorp != null">submit_corp = #{submitCorp},</if>
+            <if test="envSampleSaveCode != null">env_sample_save_code = #{envSampleSaveCode},</if>
+            <if test="envSampleSaveCon != null">env_sample_save_con = #{envSampleSaveCon},</if>
+            <if test="envSampleSaveDate != null">env_sample_save_date = #{envSampleSaveDate},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="freezeFlag != null">freeze_flag = #{freezeFlag},</if>
+            <if test="dispStatus != null">disp_status = #{dispStatus},</if>
+            <if test="wswFlag != null">wsw_flag = #{wswFlag},</if>
+            <if test="auditFlag != null">audit_flag = #{auditFlag},</if>
+            <if test="auditLevel != null">audit_level = #{auditLevel},</if>
+            <if test="rowAudit != null">row_audit = #{rowAudit},</if>
+            <if test="auditorCode != null">auditor_code = #{auditorCode},</if>
+            <if test="auditTime != null">audit_time = #{auditTime},</if>
+            <if test="workflowId != null">workflow_id = #{workflowId},</if>
+            <if test="version != null">version = #{version},</if>
+            <if test="sorter != null">sorter = #{sorter},</if>
+            <if test="recorderDesc != null">recorder_desc = #{recorderDesc},</if>
+            <if test="historyPerson != null">history_person = #{historyPerson},</if>
+            <if test="addPerson != null">add_person = #{addPerson},</if>
+            <if test="addDate != null">add_date = #{addDate},</if>
+            <if test="freezerCode != null">freezer_code = #{freezerCode},</if>
+            <if test="freezerDesc != null">freezer_desc = #{freezerDesc},</if>
+            <if test="freezeTime != null">freeze_time = #{freezeTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
         </trim>
-        where TESTSID = #{TESTSID}
+        where test_id = #{testId}
     </update>
 
-    <delete id="deleteTestsByTESTSID" parameterType="Long">
-        delete from lims_tests where TESTSID = #{TESTSID}
+    <delete id="deleteTestsByTestId" parameterType="Long">
+        delete from lims_tests where test_id = #{testId}
     </delete>
 
-    <delete id="deleteTestsByTESTSIDs" parameterType="String">
-        delete from lims_tests where TESTSID in 
-        <foreach item="TESTSID" collection="array" open="(" separator="," close=")">
-            #{TESTSID}
+    <delete id="deleteTestsByTestIds" parameterType="String">
+        delete from lims_tests where test_id in 
+        <foreach item="testId" collection="array" open="(" separator="," close=")">
+            #{testId}
         </foreach>
     </delete>
 </mapper>
