@@ -157,7 +157,7 @@ export default {
     .right-menu-item {
       display: inline-block;
       padding: 0 8px;
-      height: 100%;
+      // height: 100%;
       font-size: 18px;
       color: #5a5e66;
       vertical-align: text-bottom;
