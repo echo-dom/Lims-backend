@@ -1,0 +1,149 @@
+----- LIMS_TEST_METHODS 建表迁移脚本
+-- 第一步：创建临时表时强制统一排序规则
+SELECT 
+    CAST(TESTMETHODSID AS NVARCHAR(255)) COLLATE Chinese_PRC_CI_AS as original_id,
+    CAST([METHOD] AS NVARCHAR(255)) COLLATE Chinese_PRC_CI_AS as method_name,
+    CAST(CASE 
+        WHEN STATUS = '1' THEN '0'
+        WHEN STATUS = '0' THEN '1'
+        ELSE '0' 
+    END AS NVARCHAR(10)) COLLATE Chinese_PRC_CI_AS as status,
+    CAST(METHODTYPE AS NVARCHAR(255)) COLLATE Chinese_PRC_CI_AS as method_type,
+    CAST(DEPT AS NVARCHAR(255)) COLLATE Chinese_PRC_CI_AS as dept_id,
+    CAST(VERSION AS NVARCHAR(255)) COLLATE Chinese_PRC_CI_AS as version,
+    CAST(METHODDESC AS NVARCHAR(MAX)) COLLATE Chinese_PRC_CI_AS as method_desc,
+    CAST(METHODCODE AS NVARCHAR(255)) COLLATE Chinese_PRC_CI_AS as method_code,
+    CAST(METHODNO AS NVARCHAR(255)) COLLATE Chinese_PRC_CI_AS as method_no,
+    CAST(CLAUSE AS NVARCHAR(255)) COLLATE Chinese_PRC_CI_AS as clause,
+    CAST(CLAUSENAME AS NVARCHAR(255)) COLLATE Chinese_PRC_CI_AS as clause_name,
+    CAST(CLAUSENAME_ENG AS NVARCHAR(255)) COLLATE Chinese_PRC_CI_AS as clause_name_eng,
+    CAST(METHODNAME_ENG AS NVARCHAR(255)) COLLATE Chinese_PRC_CI_AS as method_name_eng,
+    CAST(ISORDERS AS NVARCHAR(255)) COLLATE Chinese_PRC_CI_AS as is_orders,
+    CAST(METHODSTATUS AS NVARCHAR(255)) COLLATE Chinese_PRC_CI_AS as method_status,
+    CAST(METHODSTATUSVALUE AS NVARCHAR(255)) COLLATE Chinese_PRC_CI_AS as method_status_value,
+    CAST(DETECTORANDCONDITION AS NVARCHAR(MAX)) COLLATE Chinese_PRC_CI_AS as detector_and_condition,
+    CAST(EQREMARKANDMETHOD AS NVARCHAR(MAX)) COLLATE Chinese_PRC_CI_AS as eq_remark_and_method,
+    CAST(METHODOVERVIEW AS NVARCHAR(MAX)) COLLATE Chinese_PRC_CI_AS as method_overview,
+    CAST(TESTEXPLAIN AS NVARCHAR(MAX)) COLLATE Chinese_PRC_CI_AS as test_explain,
+    CAST(METHODEXPLAIN AS NVARCHAR(MAX)) COLLATE Chinese_PRC_CI_AS as method_explain,
+    CAST(consumable AS NVARCHAR(MAX)) COLLATE Chinese_PRC_CI_AS as consumable,
+    CAST(RECORDERCODE AS NVARCHAR(255)) COLLATE Chinese_PRC_CI_AS as create_by,
+    RECORDTIME as create_time,
+    CAST(MODIFIEDBY AS NVARCHAR(255)) COLLATE Chinese_PRC_CI_AS as update_by,
+    MODIFYDATE as update_time,
+    CAST(COALESCE(METHODDESC, '') AS NVARCHAR(MAX)) COLLATE Chinese_PRC_CI_AS as remark
+INTO #TempMethods
+FROM LIMS_TEST_METHODS;
+
+-- 第二步：生成 INSERT 语句（使用 CONCAT 避免排序规则冲突）
+SELECT 
+    CONCAT(
+        'INSERT INTO lims_test_methods (original_id, method_name, status, method_type, dept_id, version, method_desc, method_code, method_no, clause, clause_name, clause_name_eng, method_name_eng, is_orders, method_status, method_status_value, detector_and_condition, eq_remark_and_method, method_overview, test_explain, method_explain, consumable, create_by, create_time, update_by, update_time, remark) VALUES (',
+        '''', original_id, ''', ',
+        '''', REPLACE(ISNULL(method_name, ''), '''', ''''''), ''', ',
+        '''', status, ''', ',
+        '''', REPLACE(ISNULL(method_type, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(dept_id, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(version, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(method_desc, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(method_code, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(method_no, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(clause, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(clause_name, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(clause_name_eng, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(method_name_eng, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(is_orders, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(method_status, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(method_status_value, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(detector_and_condition, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(eq_remark_and_method, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(method_overview, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(test_explain, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(method_explain, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(consumable, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(create_by, ''), '''', ''''''), ''', ',
+        CASE 
+            WHEN create_time IS NULL THEN 'NULL'
+            ELSE CONCAT('''', CONVERT(VARCHAR, create_time, 120), '''')
+        END, ', ',
+        '''', REPLACE(ISNULL(update_by, ''), '''', ''''''), ''', ',
+        CASE 
+            WHEN update_time IS NULL THEN 'NULL'
+            ELSE CONCAT('''', CONVERT(VARCHAR, update_time, 120), '''')
+        END, ', ',
+        '''', REPLACE(ISNULL(remark, ''), '''', ''''''), '''',
+        ');'
+    )
+FROM #TempMethods;
+
+-- 第三步：清理临时表
+DROP TABLE #TempMethods;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CREATE TABLE `lims_test_methods` (
+  -- 主键改为自增ID，不使用原系统ID
+  `test_methods_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `original_id` varchar(100) DEFAULT NULL COMMENT '原系统ID',
+  
+  -- 核心标识字段
+  `method_code` varchar(100) NOT NULL COMMENT '方法编号',
+  `method_no` varchar(100) DEFAULT NULL COMMENT '方法号',
+  `method_name` varchar(500) NOT NULL COMMENT '方法名称',
+  `method_name_eng` varchar(200) DEFAULT NULL COMMENT '方法简称',
+  
+  -- 基本分类信息
+  `method_type` varchar(50) DEFAULT NULL COMMENT '方法类型',
+  `status` char(1) DEFAULT '0' COMMENT '状态（0正常 1停用）',
+  
+  -- 条款信息
+  `clause` varchar(200) DEFAULT NULL COMMENT '条款号',
+  `clause_name` varchar(500) DEFAULT NULL COMMENT '条款名称',
+  `clause_name_eng` varchar(500) DEFAULT NULL COMMENT '条款名称英文',
+  
+  -- 业务状态
+  `is_orders` char(1) DEFAULT '0' COMMENT '是否接单',
+  `method_status` varchar(50) DEFAULT NULL COMMENT '方法状态',
+  `method_status_value` varchar(100) DEFAULT NULL COMMENT '方法状态值',
+  
+  -- 技术内容
+  `method_desc` text COMMENT '方法描述',
+  `version` varchar(50) DEFAULT NULL COMMENT '版本号',
+  `detector_and_condition` text COMMENT '检测仪器及条件',
+  `eq_remark_and_method` text COMMENT '仪器备注及方法',
+  `method_overview` text COMMENT '样品处理及方法概述',
+  `test_explain` text COMMENT '检验项目说明',
+  `method_explain` text COMMENT '方法说明',
+  `consumable` text COMMENT '耗材',
+  
+  -- 部门信息
+  `dept_id` varchar(50) DEFAULT NULL COMMENT '部门ID',
+  
+  -- 若依标准字段
+  `create_by` varchar(64) DEFAULT '' COMMENT '创建者',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_by` varchar(64) DEFAULT '' COMMENT '更新者',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `remark` varchar(500) DEFAULT NULL COMMENT '备注',
+  `del_flag` char(1) DEFAULT '0' COMMENT '删除标志（0代表存在 1代表删除）',
+  
+  PRIMARY KEY (`test_methods_id`),
+  UNIQUE KEY `idx_method_code` (`method_code`),
+  KEY `idx_original_id` (`original_id`),
+  KEY `idx_method_type` (`method_type`),
+  KEY `idx_status` (`status`),
+  KEY `idx_dept_id` (`dept_id`),
+  KEY `idx_is_orders` (`is_orders`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='测试方法表';

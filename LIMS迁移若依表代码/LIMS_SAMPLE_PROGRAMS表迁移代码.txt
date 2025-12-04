@@ -1,0 +1,168 @@
+LIMS_SAMPLE_PROGRAMS
+
+CREATE TABLE `lims_sample_programs` (
+  `sample_programs_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `original_id` varchar(100) DEFAULT NULL COMMENT '原系统ID',
+  
+  -- 核心标识字段
+  `sp_code` varchar(100) NOT NULL COMMENT '执行标准编号',
+  `sp_code_alt` varchar(100) DEFAULT NULL COMMENT '备用标准编号',
+  
+  -- 标准相关信息
+  `test_rules` varchar(500) DEFAULT NULL COMMENT '测试规则',
+  `criterion_id` varchar(100) DEFAULT NULL COMMENT '标准ID',
+  `version` varchar(50) DEFAULT NULL COMMENT '版本号',
+  
+  -- 领域分类
+  `domain_id` varchar(100) DEFAULT NULL COMMENT '领域ID',
+  `domain_name` varchar(200) DEFAULT NULL COMMENT '领域名称',
+  
+  -- 样品信息
+  `sample_type` varchar(100) DEFAULT NULL COMMENT '样品类型',
+  `full_type` varchar(200) DEFAULT NULL COMMENT '完整类型',
+  `detail_name` varchar(500) DEFAULT NULL COMMENT '详细名称',
+  
+  -- 状态标志
+  `status` char(1) DEFAULT '0' COMMENT '状态（0正常 1停用）',
+  `freeze_flag` char(1) DEFAULT '0' COMMENT '冻结标志（0未冻结 1已冻结）',
+  `is_cal` char(1) DEFAULT '0' COMMENT '是否校准（0否 1是）',
+  `disp_status` varchar(50) DEFAULT NULL COMMENT '显示状态',
+  
+  -- 冻结信息
+  `freeze_by` varchar(64) DEFAULT '' COMMENT '冻结者',
+  `freezer_desc` varchar(500) DEFAULT NULL COMMENT '冻结描述',
+  `freeze_time` datetime DEFAULT NULL COMMENT '冻结时间',
+  
+  -- 创建者信息
+  `recorder_desc` varchar(500) DEFAULT NULL COMMENT '记录者描述',
+  `creater_desc` varchar(200) DEFAULT NULL COMMENT '创建者描述',
+  `creater_code` varchar(100) DEFAULT NULL COMMENT '创建者代码',
+  `creater_date` datetime DEFAULT NULL COMMENT '创建日期',
+  
+  -- 时间信息
+  `start_time` datetime DEFAULT NULL COMMENT '开始时间',
+  
+  -- 排序
+  `sorter` int(11) DEFAULT NULL COMMENT '排序',
+  
+  -- 若依标准字段
+  `create_by` varchar(64) DEFAULT '' COMMENT '创建者',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_by` varchar(64) DEFAULT '' COMMENT '更新者',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `remark` varchar(500) DEFAULT NULL COMMENT '备注',
+  `del_flag` char(1) DEFAULT '0' COMMENT '删除标志（0代表存在 1代表删除）',
+  
+  PRIMARY KEY (`sample_programs_id`),
+  UNIQUE KEY `idx_sp_code` (`sp_code`),
+  KEY `idx_original_id` (`original_id`),
+  KEY `idx_criterion_id` (`criterion_id`),
+  KEY `idx_domain_id` (`domain_id`),
+  KEY `idx_status` (`status`),
+  KEY `idx_freeze_flag` (`freeze_flag`),
+  KEY `idx_is_cal` (`is_cal`),
+  KEY `idx_sample_type` (`sample_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='执行标准表';
+
+数据迁移SQL
+-- 第一步：创建临时表时强制统一排序规则
+SELECT 
+    CAST(SAMPLEPROGRAMSID AS NVARCHAR(255)) COLLATE Chinese_PRC_CI_AS as original_id,
+    CAST(SPCODE AS NVARCHAR(255)) COLLATE Chinese_PRC_CI_AS as sp_code,
+    CAST(TESTRULES AS NVARCHAR(500)) COLLATE Chinese_PRC_CI_AS as test_rules,
+    CAST(CRITERIONID AS NVARCHAR(255)) COLLATE Chinese_PRC_CI_AS as criterion_id,
+    CAST(DOMAINID AS NVARCHAR(255)) COLLATE Chinese_PRC_CI_AS as domain_id,
+    CAST(VERSION AS NVARCHAR(50)) COLLATE Chinese_PRC_CI_AS as version,
+    CAST(RECORDERCODE AS NVARCHAR(255)) COLLATE Chinese_PRC_CI_AS as create_by,
+    CAST(RECORDERDESC AS NVARCHAR(500)) COLLATE Chinese_PRC_CI_AS as recorder_desc,
+    RECORDTIME as create_time,
+    CAST(CASE 
+        WHEN FREEZEFLAG = '1' THEN '1'
+        WHEN FREEZEFLAG = '0' THEN '0'
+        ELSE '0' 
+    END AS NVARCHAR(10)) COLLATE Chinese_PRC_CI_AS as freeze_flag,
+    CAST(FREEZERCODE AS NVARCHAR(255)) COLLATE Chinese_PRC_CI_AS as freeze_by,
+    CAST(FREEZERDESC AS NVARCHAR(500)) COLLATE Chinese_PRC_CI_AS as freezer_desc,
+    FREEZETIME as freeze_time,
+    CAST(SAMPLE_TYPE AS NVARCHAR(100)) COLLATE Chinese_PRC_CI_AS as sample_type,
+    CAST(FULLTYPE AS NVARCHAR(200)) COLLATE Chinese_PRC_CI_AS as full_type,
+    CAST(DETAILNAME AS NVARCHAR(500)) COLLATE Chinese_PRC_CI_AS as detail_name,
+    CAST(CASE 
+        WHEN STATUS = '1' THEN '1'
+        WHEN STATUS = '0' THEN '0'
+        ELSE '0' 
+    END AS NVARCHAR(10)) COLLATE Chinese_PRC_CI_AS as status,
+    CAST(DOMAINNAME AS NVARCHAR(200)) COLLATE Chinese_PRC_CI_AS as domain_name,
+    CAST(CASE 
+        WHEN ISCAL = '1' THEN '1'
+        WHEN ISCAL = '0' THEN '0'
+        ELSE '0' 
+    END AS NVARCHAR(10)) COLLATE Chinese_PRC_CI_AS as is_cal,
+    CAST(REMARK AS NVARCHAR(500)) COLLATE Chinese_PRC_CI_AS as remark,
+    CAST(SP_CODE AS NVARCHAR(255)) COLLATE Chinese_PRC_CI_AS as sp_code_alt,
+    CAST(DISPSTATUS AS NVARCHAR(50)) COLLATE Chinese_PRC_CI_AS as disp_status,
+    CAST(SORTER AS NVARCHAR(10)) COLLATE Chinese_PRC_CI_AS as sorter,
+    CAST(CREATERDESC AS NVARCHAR(200)) COLLATE Chinese_PRC_CI_AS as creater_desc,
+    CAST(CREATERCODE AS NVARCHAR(100)) COLLATE Chinese_PRC_CI_AS as creater_code,
+    CREATERDATE as creater_date,
+    starttime as start_time,
+    CAST(RECORDERCODE AS NVARCHAR(255)) COLLATE Chinese_PRC_CI_AS as update_by,
+    RECORDTIME as update_time
+INTO #TempSamplePrograms
+FROM LIMS_SAMPLE_PROGRAMS;
+
+-- 第二步：生成 INSERT 语句（使用 CONCAT 避免排序规则冲突）
+SELECT 
+    CONCAT(
+        'INSERT INTO lims_sample_programs (original_id, sp_code, test_rules, criterion_id, domain_id, version, create_by, recorder_desc, create_time, freeze_flag, freeze_by, freezer_desc, freeze_time, sample_type, full_type, detail_name, status, domain_name, is_cal, remark, sp_code_alt, disp_status, sorter, creater_desc, creater_code, creater_date, start_time, update_by, update_time, del_flag) VALUES (',
+        '''', original_id, ''', ',
+        '''', REPLACE(ISNULL(sp_code, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(test_rules, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(criterion_id, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(domain_id, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(version, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(create_by, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(recorder_desc, ''), '''', ''''''), ''', ',
+        CASE 
+            WHEN create_time IS NULL THEN 'NULL'
+            ELSE CONCAT('''', CONVERT(VARCHAR, create_time, 120), '''')
+        END, ', ',
+        '''', freeze_flag, ''', ',
+        '''', REPLACE(ISNULL(freeze_by, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(freezer_desc, ''), '''', ''''''), ''', ',
+        CASE 
+            WHEN freeze_time IS NULL THEN 'NULL'
+            ELSE CONCAT('''', CONVERT(VARCHAR, freeze_time, 120), '''')
+        END, ', ',
+        '''', REPLACE(ISNULL(sample_type, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(full_type, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(detail_name, ''), '''', ''''''), ''', ',
+        '''', status, ''', ',
+        '''', REPLACE(ISNULL(domain_name, ''), '''', ''''''), ''', ',
+        '''', is_cal, ''', ',
+        '''', REPLACE(ISNULL(remark, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(sp_code_alt, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(disp_status, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(sorter, 0), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(creater_desc, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(creater_code, ''), '''', ''''''), ''', ',
+        CASE 
+            WHEN creater_date IS NULL THEN 'NULL'
+            ELSE CONCAT('''', CONVERT(VARCHAR, creater_date, 120), '''')
+        END, ', ',
+        CASE 
+            WHEN start_time IS NULL THEN 'NULL'
+            ELSE CONCAT('''', CONVERT(VARCHAR, start_time, 120), '''')
+        END, ', ',
+        '''', REPLACE(ISNULL(update_by, ''), '''', ''''''), ''', ',
+        CASE 
+            WHEN update_time IS NULL THEN 'NULL'
+            ELSE CONCAT('''', CONVERT(VARCHAR, update_time, 120), '''')
+        END, ', ',
+        '''0''',  -- del_flag 默认值为 '0'
+        ');'
+    )
+FROM #TempSamplePrograms;
+
+-- 第三步：清理临时表
+DROP TABLE #TempSamplePrograms;

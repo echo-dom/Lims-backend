@@ -1,0 +1,243 @@
+CREATE TABLE `lims_tests` (
+                              `test_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+                              `original_id` varchar(100) DEFAULT NULL COMMENT '原系统ID',
+
+    -- 核心标识信息
+                              `test_code` varchar(100) NOT NULL COMMENT '测试代码',
+                              `test_name` varchar(500) NOT NULL COMMENT '测试名称',
+                              `gc_test_name` varchar(500) DEFAULT NULL COMMENT 'GC测试名称',
+                              `original_code` varchar(100) DEFAULT NULL COMMENT '原始代码',
+
+    -- 分类信息
+                              `domain_id` varchar(100) DEFAULT NULL COMMENT '领域ID',
+                              `test_category_id` varchar(100) DEFAULT NULL COMMENT '测试分类ID',
+                              `test_cate_name` varchar(200) DEFAULT NULL COMMENT '测试分类名称',
+                              `full_type` varchar(200) DEFAULT NULL COMMENT '完整类型',
+                              `test_group` varchar(200) DEFAULT NULL COMMENT '测试分组',
+
+    -- 报告相关信息
+                              `name_in_report` varchar(500) DEFAULT NULL COMMENT '报告中名称',
+                              `spell_simplify` varchar(200) DEFAULT NULL COMMENT '拼音简写',
+                              `report_test_no` varchar(100) DEFAULT NULL COMMENT '报告测试编号',
+
+    -- 测试内容
+                              `test_items` text COMMENT '测试项目',
+                              `test_explain` text COMMENT '测试说明',
+                              `sampling_method` text COMMENT '抽样方法',
+
+    -- 价格信息
+                              `t_price` decimal(15,2) DEFAULT NULL COMMENT '测试价格',
+
+    -- 单位信息
+                              `unit` varchar(50) DEFAULT NULL COMMENT '单位',
+
+    -- 认证信息
+                              `cma` varchar(100) DEFAULT NULL COMMENT 'CMA认证',
+                              `cnas` varchar(100) DEFAULT NULL COMMENT 'CNAS认证',
+
+    -- 组织信息
+                              `dept` varchar(100) DEFAULT NULL COMMENT '部门',
+                              `cc_id` varchar(100) DEFAULT NULL COMMENT '成本中心ID',
+                              `submit_corp` varchar(200) DEFAULT NULL COMMENT '提交公司',
+
+    -- 环境样品保存信息
+                              `env_sample_save_code` varchar(100) DEFAULT NULL COMMENT '环境样品保存代码',
+                              `env_sample_save_con` varchar(500) DEFAULT NULL COMMENT '环境样品保存条件',
+                              `env_sample_save_date` varchar(100) DEFAULT NULL COMMENT '环境样品保存日期',
+
+    -- 状态标志
+                              `status` char(1) DEFAULT '0' COMMENT '状态（0正常 1停用）',
+                              `freeze_flag` char(1) DEFAULT '0' COMMENT '冻结标志（0未冻结 1已冻结）',
+                              `disp_status` varchar(50) DEFAULT NULL COMMENT '显示状态',
+                              `wsw_flag` varchar(50) DEFAULT NULL COMMENT 'WSW标志',
+
+    -- 审核信息
+                              `audit_flag` varchar(50) DEFAULT NULL COMMENT '审核标志',
+                              `audit_level` varchar(50) DEFAULT NULL COMMENT '审核级别',
+                              `row_audit` varchar(50) DEFAULT NULL COMMENT '行审核',
+
+    -- 工作流
+                              `workflow_id` varchar(100) DEFAULT NULL COMMENT '工作流ID',
+
+    -- 版本信息
+                              `version` varchar(50) DEFAULT NULL COMMENT '版本',
+
+    -- 排序
+                              `sorter` int(11) DEFAULT NULL COMMENT '排序',
+
+    -- 人员信息
+                              `recorder_desc` varchar(500) DEFAULT NULL COMMENT '记录者描述',
+                              `auditor_code` varchar(100) DEFAULT NULL COMMENT '审核人代码',
+                              `history_person` varchar(255) DEFAULT NULL COMMENT '历史人员',
+                              `add_person` varchar(100) DEFAULT NULL COMMENT '添加人员',
+
+    -- 时间信息
+                              `add_date` datetime DEFAULT NULL COMMENT '添加日期',
+
+    -- 冻结信息
+                              `freezer_code` varchar(100) DEFAULT NULL COMMENT '冻结人代码',
+                              `freezer_desc` varchar(500) DEFAULT NULL COMMENT '冻结人描述',
+                              `freeze_time` datetime DEFAULT NULL COMMENT '冻结时间',
+
+    -- 若依标准字段
+                              `create_by` varchar(64) DEFAULT '' COMMENT '创建者',
+                              `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+                              `update_by` varchar(64) DEFAULT '' COMMENT '更新者',
+                              `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+                              `remark` varchar(500) DEFAULT NULL COMMENT '备注',
+                              `del_flag` char(1) DEFAULT '0' COMMENT '删除标志（0代表存在 1代表删除）',
+
+                              PRIMARY KEY (`test_id`),
+                              UNIQUE KEY `idx_original_id` (`original_id`),
+                              UNIQUE KEY `idx_test_code` (`test_code`),
+                              KEY `idx_test_name` (`test_name`),
+                              KEY `idx_domain_id` (`domain_id`),
+                              KEY `idx_test_category_id` (`test_category_id`),
+                              KEY `idx_status` (`status`),
+                              KEY `idx_dept` (`dept`),
+                              KEY `idx_create_time` (`create_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='测试项目表';
+
+
+
+
+
+-- 第一步：创建临时表时强制统一排序规则
+SELECT 
+    CAST(TESTSID AS NVARCHAR(255)) COLLATE Chinese_PRC_CI_AS as original_id,
+    CAST(DOMAINID AS NVARCHAR(255)) COLLATE Chinese_PRC_CI_AS as domain_id,
+    CAST(TESTCATEGORYID AS NVARCHAR(255)) COLLATE Chinese_PRC_CI_AS as test_category_id,
+    CAST(TESTCODE AS NVARCHAR(100)) COLLATE Chinese_PRC_CI_AS as test_code,
+    CAST(TESTNAME AS NVARCHAR(500)) COLLATE Chinese_PRC_CI_AS as test_name,
+    CAST(SPELLSIMPLIFY AS NVARCHAR(200)) COLLATE Chinese_PRC_CI_AS as spell_simplify,
+    CAST(NAMEINREPORT AS NVARCHAR(500)) COLLATE Chinese_PRC_CI_AS as name_in_report,
+    CAST(TESTITEMS AS NVARCHAR(1000)) COLLATE Chinese_PRC_CI_AS as test_items,
+    CAST(TPRICE AS NVARCHAR(100)) COLLATE Chinese_PRC_CI_AS as t_price,
+    CAST(SORTER AS NVARCHAR(10)) COLLATE Chinese_PRC_CI_AS as sorter,
+    CAST(UNIT AS NVARCHAR(50)) COLLATE Chinese_PRC_CI_AS as unit,
+    CAST(CMA AS NVARCHAR(100)) COLLATE Chinese_PRC_CI_AS as cma,
+    CAST(CNAS AS NVARCHAR(100)) COLLATE Chinese_PRC_CI_AS as cnas,
+    CAST(DEPT AS NVARCHAR(255)) COLLATE Chinese_PRC_CI_AS as dept,
+    CAST(CCID AS NVARCHAR(255)) COLLATE Chinese_PRC_CI_AS as cc_id,
+    CAST(VERSION AS NVARCHAR(50)) COLLATE Chinese_PRC_CI_AS as version,
+    CAST(RECORDERCODE AS NVARCHAR(255)) COLLATE Chinese_PRC_CI_AS as create_by,
+    CAST(RECORDERDESC AS NVARCHAR(500)) COLLATE Chinese_PRC_CI_AS as recorder_desc,
+    RECORDTIME as create_time,
+    CAST(AUDITORCODE AS NVARCHAR(255)) COLLATE Chinese_PRC_CI_AS as auditor_code,
+    CAST(SAMPLING_METHOD AS NVARCHAR(500)) COLLATE Chinese_PRC_CI_AS as sampling_method,
+    AUDITTIME as audit_time,
+    CAST(AUDITFLAG AS NVARCHAR(50)) COLLATE Chinese_PRC_CI_AS as audit_flag,
+    CAST(AUDITLEVEL AS NVARCHAR(50)) COLLATE Chinese_PRC_CI_AS as audit_level,
+    CAST(SUBMITCORP AS NVARCHAR(200)) COLLATE Chinese_PRC_CI_AS as submit_corp,
+    CAST(WORKFLOWID AS NVARCHAR(255)) COLLATE Chinese_PRC_CI_AS as workflow_id,
+    CAST(CASE 
+        WHEN FREEZEFLAG = '1' THEN '1'
+        WHEN FREEZEFLAG = '0' THEN '0'
+        ELSE '0' 
+    END AS NVARCHAR(10)) COLLATE Chinese_PRC_CI_AS as freeze_flag,
+    CAST(FREEZERCODE AS NVARCHAR(255)) COLLATE Chinese_PRC_CI_AS as freezer_code,
+    CAST(FREEZERDESC AS NVARCHAR(500)) COLLATE Chinese_PRC_CI_AS as freezer_desc,
+    FREEZETIME as freeze_time,
+    CAST(ADDPERSON AS NVARCHAR(255)) COLLATE Chinese_PRC_CI_AS as add_person,
+    ADDDATE as add_date,
+    CAST(REPORTTESTNO AS NVARCHAR(100)) COLLATE Chinese_PRC_CI_AS as report_test_no,
+    CAST(TESTCATENAME AS NVARCHAR(200)) COLLATE Chinese_PRC_CI_AS as test_cate_name,
+    CAST(ROWAUDIT AS NVARCHAR(50)) COLLATE Chinese_PRC_CI_AS as row_audit,
+    CAST(GC_TESTNAME AS NVARCHAR(500)) COLLATE Chinese_PRC_CI_AS as gc_test_name,
+    CAST(ORIGINALCODE AS NVARCHAR(100)) COLLATE Chinese_PRC_CI_AS as original_code,
+    CAST(ENVSAMPLESAVECODE AS NVARCHAR(100)) COLLATE Chinese_PRC_CI_AS as env_sample_save_code,
+    CAST(ENVSAMPLESAVECON AS NVARCHAR(500)) COLLATE Chinese_PRC_CI_AS as env_sample_save_con,
+    CAST(ENVSAMPLESAVEDATE AS NVARCHAR(100)) COLLATE Chinese_PRC_CI_AS as env_sample_save_date,
+    CAST(CASE 
+        WHEN STATUS = '1' THEN '0'
+        WHEN STATUS = '0' THEN '1'
+        ELSE '0' 
+    END AS NVARCHAR(10)) COLLATE Chinese_PRC_CI_AS as status,
+    CAST(DISPSTATUS AS NVARCHAR(50)) COLLATE Chinese_PRC_CI_AS as disp_status,
+    CAST(TESTEXPLAIN AS NVARCHAR(MAX)) COLLATE Chinese_PRC_CI_AS as test_explain,
+    CAST(HISTORYPERSON AS NVARCHAR(255)) COLLATE Chinese_PRC_CI_AS as history_person,
+    CAST(wswflag AS NVARCHAR(50)) COLLATE Chinese_PRC_CI_AS as wsw_flag,
+    CAST(FULLTYPE AS NVARCHAR(200)) COLLATE Chinese_PRC_CI_AS as full_type,
+    CAST(testgroup AS NVARCHAR(200)) COLLATE Chinese_PRC_CI_AS as test_group,
+    CAST(RECORDERCODE AS NVARCHAR(255)) COLLATE Chinese_PRC_CI_AS as update_by,
+    RECORDTIME as update_time,
+    CAST(COALESCE(TESTEXPLAIN, '') AS NVARCHAR(MAX)) COLLATE Chinese_PRC_CI_AS as remark
+INTO #TempTests
+FROM LIMS_TESTS;
+
+-- 第二步：生成 INSERT 语句（使用 CONCAT 避免排序规则冲突）
+SELECT 
+    CONCAT(
+        'INSERT INTO lims_tests (original_id, domain_id, test_category_id, test_code, test_name, spell_simplify, name_in_report, test_items, t_price, sorter, unit, cma, cnas, dept, cc_id, version, create_by, recorder_desc, create_time, auditor_code, sampling_method, audit_time, audit_flag, audit_level, submit_corp, workflow_id, freeze_flag, freezer_code, freezer_desc, freeze_time, add_person, add_date, report_test_no, test_cate_name, row_audit, gc_test_name, original_code, env_sample_save_code, env_sample_save_con, env_sample_save_date, status, disp_status, test_explain, history_person, wsw_flag, full_type, test_group, update_by, update_time, remark, del_flag) VALUES (',
+        '''', original_id, ''', ',
+        '''', REPLACE(ISNULL(domain_id, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(test_category_id, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(test_code, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(test_name, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(spell_simplify, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(name_in_report, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(test_items, ''), '''', ''''''), ''', ',
+        '''', 0, ''', ',
+        '''', REPLACE(ISNULL(sorter, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(unit, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(cma, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(cnas, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(dept, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(cc_id, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(version, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(create_by, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(recorder_desc, ''), '''', ''''''), ''', ',
+        CASE 
+            WHEN create_time IS NULL THEN 'NULL'
+            ELSE CONCAT('''', CONVERT(VARCHAR, create_time, 120), '''')
+        END, ', ',
+        '''', REPLACE(ISNULL(auditor_code, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(sampling_method, ''), '''', ''''''), ''', ',
+        CASE 
+            WHEN audit_time IS NULL THEN 'NULL'
+            ELSE CONCAT('''', CONVERT(VARCHAR, audit_time, 120), '''')
+        END, ', ',
+        '''', REPLACE(ISNULL(audit_flag, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(audit_level, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(submit_corp, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(workflow_id, ''), '''', ''''''), ''', ',
+        '''', freeze_flag, ''', ',
+        '''', REPLACE(ISNULL(freezer_code, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(freezer_desc, ''), '''', ''''''), ''', ',
+        CASE 
+            WHEN freeze_time IS NULL THEN 'NULL'
+            ELSE CONCAT('''', CONVERT(VARCHAR, freeze_time, 120), '''')
+        END, ', ',
+        '''', REPLACE(ISNULL(add_person, ''), '''', ''''''), ''', ',
+        CASE 
+            WHEN add_date IS NULL THEN 'NULL'
+            ELSE CONCAT('''', CONVERT(VARCHAR, add_date, 120), '''')
+        END, ', ',
+        '''', REPLACE(ISNULL(report_test_no, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(test_cate_name, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(row_audit, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(gc_test_name, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(original_code, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(env_sample_save_code, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(env_sample_save_con, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(env_sample_save_date, ''), '''', ''''''), ''', ',
+        '''', status, ''', ',
+        '''', REPLACE(ISNULL(disp_status, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(test_explain, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(history_person, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(wsw_flag, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(full_type, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(test_group, ''), '''', ''''''), ''', ',
+        '''', REPLACE(ISNULL(update_by, ''), '''', ''''''), ''', ',
+        CASE 
+            WHEN update_time IS NULL THEN 'NULL'
+            ELSE CONCAT('''', CONVERT(VARCHAR, update_time, 120), '''')
+        END, ', ',
+        '''', REPLACE(ISNULL(remark, ''), '''', ''''''), ''', ',
+        '''0''',  -- del_flag 默认值为 '0'
+        ');'
+    )
+FROM #TempTests;
+
+-- 第三步：清理临时表
+DROP TABLE #TempTests;
